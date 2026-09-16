@@ -90,274 +90,270 @@
     </div>
   </section>
 
+  <!-- App logado: sidebar fixa + conteúdo -->
+  <div id="app-shell" class="app-shell hidden">
+    <nav class="sidebar">
+      <div class="sidebar-brand">
+        <div class="logo-circle logo-circle-sm">💰</div>
+        <div>
+          <strong>MVP Doações</strong>
+          <small>Gestão de Doações</small>
+        </div>
+      </div>
+      <ul class="nav flex-column">
+        <li><a class="nav-link active" data-page="dashboard" onclick="showPage('dashboard')"><i
+              class="fi fi-rr-dashboard"></i> Dashboard</a></li>
+        <li><a class="nav-link" data-page="doador" onclick="showPage('doador')"><i class="fi fi-rr-users"></i>
+            Doadores</a></li>
+        <li><a class="nav-link" data-page="doacao" onclick="showPage('doacao')"><i class="fi fi-rr-gift"></i>
+            Doações</a></li>
+        <li><a class="nav-link" data-page="interacao" onclick="showPage('interacao')"><i class="fi fi-rr-comment"></i>
+            Interações</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <span class="logged-in-text">Logado como <strong id="userEmailDisplay"></strong></span>
+        <a class="nav-link" onclick="signOut()"><i class="fi fi-rr-exit"></i> Sair</a>
+      </div>
+    </nav>
 
-  <section id="system-page" class="view hidden">
-    <!-- App logado: sidebar fixa + conteúdo -->
-    <div id="app-shell" class="app-shell">
-      <nav class="sidebar">
-        <div class="sidebar-brand">
-          <div class="logo-circle logo-circle-sm">💰</div>
+    <main class="main-content">
+      <!-- Dashboard -->
+      <div id="dashboard-page" class="app-page">
+        <div class="dashboard-header">
           <div>
-            <strong>MVP Doações</strong>
-            <small>Gestão de Doações</small>
+            <h1>Dashboard</h1>
+            <p>Visão geral das doações e doadores</p>
           </div>
         </div>
-        <ul class="nav flex-column">
-          <li><a class="nav-link active" data-page="dashboard" onclick="showPage('dashboard')"><i
-                class="fi fi-rr-dashboard"></i> Dashboard</a></li>
-          <li><a class="nav-link" data-page="doador" onclick="showPage('doador')"><i class="fi fi-rr-users"></i>
-              Doadores</a></li>
-          <li><a class="nav-link" data-page="doacao" onclick="showPage('doacao')"><i class="fi fi-rr-gift"></i>
-              Doações</a></li>
-          <li><a class="nav-link" data-page="interacao" onclick="showPage('interacao')"><i class="fi fi-rr-comment"></i>
-              Interações</a></li>
-        </ul>
-        <div class="sidebar-footer">
-          <span class="logged-in-text">Logado como <strong id="userEmailDisplay"></strong></span>
-          <a class="nav-link" onclick="signOut()"><i class="fi fi-rr-exit"></i> Sair</a>
-        </div>
-      </nav>
-
-      <main class="main-content">
-        <!-- Dashboard -->
-        <div id="dashboard-page" class="app-page">
-          <div class="dashboard-header">
-            <div>
-              <h1>Dashboard</h1>
-              <p>Visão geral das doações e doadores</p>
+        <div class="row g-3">
+          <div class="col-md-6 col-lg-3">
+            <div class="card stat-card">
+              <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="stat-label">Total Arrecadado</div>
+                  <div class="stat-value" id="statTotalArrecadado">R$ 0,00</div>
+                  <div class="stat-caption">soma das doações registradas</div>
+                </div>
+                <div class="stat-icon bg-success"><i class="fi fi-rr-chart-line-up"></i></div>
+              </div>
             </div>
           </div>
-          <div class="row g-3">
-            <div class="col-md-6 col-lg-3">
-              <div class="card stat-card">
-                <div class="card-body d-flex justify-content-between align-items-center">
-                  <div>
-                    <div class="stat-label">Total Arrecadado</div>
-                    <div class="stat-value" id="statTotalArrecadado">R$ 0,00</div>
-                    <div class="stat-caption">soma das doações registradas</div>
+          <div class="col-md-6 col-lg-3">
+            <div class="card stat-card">
+              <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="stat-label">Doadores</div>
+                  <div class="stat-value" id="statDoadores">0</div>
+                  <div class="stat-caption">cadastrados</div>
+                </div>
+                <div class="stat-icon bg-primary"><i class="fi fi-rr-users"></i></div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3">
+            <div class="card stat-card">
+              <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="stat-label">Doações</div>
+                  <div class="stat-value" id="statDoacoes">0</div>
+                  <div class="stat-caption">registradas</div>
+                </div>
+                <div class="stat-icon bg-warning"><i class="fi fi-rr-gift"></i></div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3">
+            <div class="card stat-card">
+              <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="stat-label">Interações</div>
+                  <div class="stat-value" id="statInteracoes">0</div>
+                  <div class="stat-caption">registradas</div>
+                </div>
+                <div class="stat-icon bg-info"><i class="fi fi-rr-comment"></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Doadores -->
+      <div id="doador-section" class="app-page section hidden">
+        <h2>Doadores</h2>
+        <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modalNovoDoador">
+          Novo Doador +
+        </button>
+
+        <!-- Modal: Novo Doador (Bootstrap 5) -->
+        <div class="modal fade" id="modalNovoDoador" tabindex="-1" aria-labelledby="modalNovoDoadorLabel"
+          aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modalNovoDoadorLabel">Novo Doador</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+              </div>
+              <div class="modal-body">
+                <form id="formNovoDoador">
+                  <div class="mb-3">
+                    <label for="doadorNome" class="form-label">Nome</label>
+                    <input type="text" class="form-control" id="doadorNome" placeholder="Nome" required>
                   </div>
-                  <div class="stat-icon bg-success"><i class="fi fi-rr-chart-line-up"></i></div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-              <div class="card stat-card">
-                <div class="card-body d-flex justify-content-between align-items-center">
-                  <div>
-                    <div class="stat-label">Doadores</div>
-                    <div class="stat-value" id="statDoadores">0</div>
-                    <div class="stat-caption">cadastrados</div>
+                  <div class="mb-3">
+                    <label for="doadorTelefone" class="form-label">Telefone</label>
+                    <input type="text" class="form-control" id="doadorTelefone" placeholder="Telefone">
                   </div>
-                  <div class="stat-icon bg-primary"><i class="fi fi-rr-users"></i></div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-              <div class="card stat-card">
-                <div class="card-body d-flex justify-content-between align-items-center">
-                  <div>
-                    <div class="stat-label">Doações</div>
-                    <div class="stat-value" id="statDoacoes">0</div>
-                    <div class="stat-caption">registradas</div>
+                  <div class="mb-3">
+                    <label for="doadorCpf" class="form-label">CPF/CNPJ</label>
+                    <input type="text" class="form-control" id="doadorCpf" placeholder="CPF/CNPJ">
                   </div>
-                  <div class="stat-icon bg-warning"><i class="fi fi-rr-gift"></i></div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-              <div class="card stat-card">
-                <div class="card-body d-flex justify-content-between align-items-center">
-                  <div>
-                    <div class="stat-label">Interações</div>
-                    <div class="stat-value" id="statInteracoes">0</div>
-                    <div class="stat-caption">registradas</div>
+                  <div class="mb-3">
+                    <label for="doadorEndereco" class="form-label">Endereço</label>
+                    <input type="text" class="form-control" id="doadorEndereco" placeholder="Endereço">
                   </div>
-                  <div class="stat-icon bg-info"><i class="fi fi-rr-comment"></i></div>
-                </div>
+                  <div class="mb-3">
+                    <label for="doadorEmail" class="form-label">E-mail</label>
+                    <input type="email" class="form-control" id="doadorEmail" placeholder="E-mail">
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-ghost me-auto" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success" onclick="addDoador()">Salvar</button>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Doadores -->
-        <div id="doador-section" class="app-page section hidden">
-          <h2>Doadores</h2>
-          <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modalNovoDoador">
-            Novo Doador +
-          </button>
+        <table id="doadorTable">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nome</th>
+              <th>Email</th>
+              <th>Telefone</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
 
-          <!-- Modal: Novo Doador (Bootstrap 5) -->
-          <div class="modal fade" id="modalNovoDoador" tabindex="-1" aria-labelledby="modalNovoDoadorLabel"
-            aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="modalNovoDoadorLabel">Novo Doador</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-                </div>
-                <div class="modal-body">
-                  <form id="formNovoDoador">
-                    <div class="mb-3">
-                      <label for="doadorNome" class="form-label">Nome</label>
-                      <input type="text" class="form-control" id="doadorNome" placeholder="Nome" required>
-                    </div>
-                    <div class="mb-3">
-                      <label for="doadorTelefone" class="form-label">Telefone</label>
-                      <input type="text" class="form-control" id="doadorTelefone" placeholder="Telefone">
-                    </div>
-                    <div class="mb-3">
-                      <label for="doadorCpf" class="form-label">CPF/CNPJ</label>
-                      <input type="text" class="form-control" id="doadorCpf" placeholder="CPF/CNPJ">
-                    </div>
-                    <div class="mb-3">
-                      <label for="doadorEndereco" class="form-label">Endereço</label>
-                      <input type="text" class="form-control" id="doadorEndereco" placeholder="Endereço">
-                    </div>
-                    <div class="mb-3">
-                      <label for="doadorEmail" class="form-label">E-mail</label>
-                      <input type="email" class="form-control" id="doadorEmail" placeholder="E-mail">
-                    </div>
-                  </form>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-ghost me-auto" data-bs-dismiss="modal">Cancelar</button>
-                  <button type="button" class="btn btn-success" onclick="addDoador()">Salvar</button>
-                </div>
+      <!-- Doações -->
+      <div id="doacao-section" class="app-page section hidden">
+        <h2>Doações</h2>
+        <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modalNovaDoacao">
+          Nova Doação +
+        </button>
+
+        <!-- Modal: Nova Doação (Bootstrap 5) -->
+        <div class="modal fade" id="modalNovaDoacao" tabindex="-1" aria-labelledby="modalNovaDoacaoLabel"
+          aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modalNovaDoacaoLabel">Nova Doação</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+              </div>
+              <div class="modal-body">
+                <form id="formNovaDoacao">
+                  <div class="mb-3">
+                    <label for="idDoador" class="form-label">Id do Doador</label>
+                    <input type="text" class="form-control" id="idDoador" placeholder="Id do Doador" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="doacaoValor" class="form-label">Valor</label>
+                    <input type="number" class="form-control" id="doacaoValor" placeholder="Valor">
+                  </div>
+                  <div class="mb-3">
+                    <label for="doacaoData" class="form-label">Data</label>
+                    <input type="date" class="form-control" id="doacaoData">
+                  </div>
+                  <div class="mb-3">
+                    <label for="doacaoForma" class="form-label">Forma de Pagamento</label>
+                    <input type="text" class="form-control" id="doacaoForma" placeholder="Forma de Pagamento">
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-ghost me-auto" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success" onclick="addDoacao()">Salvar</button>
               </div>
             </div>
           </div>
-
-          <table id="doadorTable">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Nome</th>
-                <th>Email</th>
-                <th>Telefone</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
         </div>
 
-        <!-- Doações -->
-        <div id="doacao-section" class="app-page section hidden">
-          <h2>Doações</h2>
-          <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modalNovaDoacao">
-            Nova Doação +
-          </button>
+        <table id="doacaoTable">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Doador</th>
+              <th>Valor</th>
+              <th>Data</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
 
-          <!-- Modal: Nova Doação (Bootstrap 5) -->
-          <div class="modal fade" id="modalNovaDoacao" tabindex="-1" aria-labelledby="modalNovaDoacaoLabel"
-            aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="modalNovaDoacaoLabel">Nova Doação</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-                </div>
-                <div class="modal-body">
-                  <form id="formNovaDoacao">
-                    <div class="mb-3">
-                      <label for="idDoador" class="form-label">Id do Doador</label>
-                      <input type="text" class="form-control" id="idDoador" placeholder="Id do Doador" required>
-                    </div>
-                    <div class="mb-3">
-                      <label for="doacaoValor" class="form-label">Valor</label>
-                      <input type="number" class="form-control" id="doacaoValor" placeholder="Valor">
-                    </div>
-                    <div class="mb-3">
-                      <label for="doacaoData" class="form-label">Data</label>
-                      <input type="date" class="form-control" id="doacaoData">
-                    </div>
-                    <div class="mb-3">
-                      <label for="doacaoForma" class="form-label">Forma de Pagamento</label>
-                      <input type="text" class="form-control" id="doacaoForma" placeholder="Forma de Pagamento">
-                    </div>
-                  </form>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-ghost me-auto" data-bs-dismiss="modal">Cancelar</button>
-                  <button type="button" class="btn btn-success" onclick="addDoacao()">Salvar</button>
-                </div>
+      <!-- Interações -->
+      <div id="interacao-section" class="app-page section hidden">
+        <h2>Interações</h2>
+        <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modalNovaInteracao">
+          Nova Interação +
+        </button>
+
+        <!-- Modal: Nova Interação (Bootstrap 5) -->
+        <div class="modal fade" id="modalNovaInteracao" tabindex="-1" aria-labelledby="modalNovaInteracaoLabel"
+          aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modalNovaInteracaoLabel">Nova Interação</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+              </div>
+              <div class="modal-body">
+                <form id="formNovaInteracao">
+                  <div class="mb-3">
+                    <label for="idDoadorInteracao" class="form-label">ID do Doador</label>
+                    <input type="text" class="form-control" id="idDoadorInteracao" placeholder="ID do Doador" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="tipoInteracao" class="form-label">Tipo</label>
+                    <input type="text" class="form-control" id="tipoInteracao" placeholder="Tipo">
+                  </div>
+                  <div class="mb-3">
+                    <label for="observacoes" class="form-label">Observações</label>
+                    <input type="text" class="form-control" id="observacoes" placeholder="Observações">
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-ghost me-auto" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success" onclick="addInteracaoNova()">Salvar</button>
               </div>
             </div>
           </div>
-
-          <table id="doacaoTable">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Doador</th>
-                <th>Valor</th>
-                <th>Data</th>
-                <th>Status</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
         </div>
 
-        <!-- Interações -->
-        <div id="interacao-section" class="app-page section hidden">
-          <h2>Interações</h2>
-          <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal"
-            data-bs-target="#modalNovaInteracao">
-            Nova Interação +
-          </button>
-
-          <!-- Modal: Nova Interação (Bootstrap 5) -->
-          <div class="modal fade" id="modalNovaInteracao" tabindex="-1" aria-labelledby="modalNovaInteracaoLabel"
-            aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="modalNovaInteracaoLabel">Nova Interação</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-                </div>
-                <div class="modal-body">
-                  <form id="formNovaInteracao">
-                    <div class="mb-3">
-                      <label for="idDoadorInteracao" class="form-label">ID do Doador</label>
-                      <input type="text" class="form-control" id="idDoadorInteracao" placeholder="ID do Doador"
-                        required>
-                    </div>
-                    <div class="mb-3">
-                      <label for="tipoInteracao" class="form-label">Tipo</label>
-                      <input type="text" class="form-control" id="tipoInteracao" placeholder="Tipo">
-                    </div>
-                    <div class="mb-3">
-                      <label for="observacoes" class="form-label">Observações</label>
-                      <input type="text" class="form-control" id="observacoes" placeholder="Observações">
-                    </div>
-                  </form>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-ghost me-auto" data-bs-dismiss="modal">Cancelar</button>
-                  <button type="button" class="btn btn-success" onclick="addInteracaoNova()">Salvar</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <table id="interacaoTable">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Doador ID</th>
-                <th>Tipo</th>
-                <th>Obs</th>
-                <th>Data</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </main>
-    </div>
+        <table id="interacaoTable">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Doador ID</th>
+              <th>Tipo</th>
+              <th>Obs</th>
+              <th>Data</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </main>
+  </div>
   </section>
 
 
