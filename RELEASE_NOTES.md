@@ -59,5 +59,11 @@ Histórico de mudanças do projeto, organizado por commit/entrega. Formato inspi
 ### Adicionado
 - Estrutura HTML inicial do sistema, com seções de Login, Doadores, Doações e Interações.
 
+## [??] — 2025-12-16 — Separar arquivo index com login, codigo js e alguns estilos 
+### Adicionado
+- Index com arquivos Js agora separados em script.js
+- Mudança na forma de apresentar o login e as abas de funcionaldiades
+- teste de componente em botão do Login
+
 ---
 *Elaborado com suporte de IA — Revisado por [Nome do Responsável]*

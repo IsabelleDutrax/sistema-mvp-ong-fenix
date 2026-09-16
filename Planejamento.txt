@@ -1,3 +1,12 @@
+Pra finalizar:
+- separar login do restante das páginas
+- transformar html e criar componentes modulares e reutilizaveis em JS mesmo
+- Transformar em React os componentes reutilizaveis: tabela, botão, card, tabs, inputs ...
+- Finalizar: 
+    - criar modais para edição e criação
+    - transformar inputs em selects para os modais
+- Mudar banco de dados
+
 
 
 Pro futuro:
