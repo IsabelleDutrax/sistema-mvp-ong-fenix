@@ -1,0 +1,5 @@
+
+
+Pro futuro:
+- Sistema de login com sessão e cadastrp
+- Aplicar os maxins do scss nos estilos pra simplificar  
