@@ -169,12 +169,56 @@ async function loadDoadores() {
       <td>${d.email || ""}</td>
       <td>${d.telefone || ""}</td>
       <td class="actions-td">
-        <primary-button icon="fi fi-rr-pencil" className="btn btn-outline-secondary" data-onclick="updateDoador(${d.id_doador})"></primary-button>
-        <primary-button icon="fi fi-rr-trash" className="btn-danger" data-onclick="deleteDoador(${d.id_doador})"></primary-button>
+        <div class="actions-content">
+          <primary-button icon="fi fi-rr-pencil" className="btn btn-outline-secondary" data-onclick="updateDoador(${d.id_doador})"></primary-button>
+          <primary-button icon="fi fi-rr-trash" className="btn-danger" data-onclick="deleteDoador(${d.id_doador})"></primary-button>
+        </div>
       </td>
     </tr>`;
   });
 }
+
+function apenasDigitos(texto) {
+  return texto.replace(/\D/g, "");
+}
+
+function badgeStatus(status) {
+  const cores = {
+    Pago: "bg-success",
+    Pendente: "bg-warning",
+    "Não Pago": "bg-danger",
+  };
+  const cor = cores[status] || "bg-secondary";
+  return `<span class="badge ${cor}">${status || "-"}</span>`;
+}
+
+function formatarData(data) {
+  if (!data) return "";
+  const [ano, mes, dia] = data.split("T")[0].split("-");
+  return `${dia}/${mes}/${ano}`;
+}
+
+function hojeISO() {
+  const hoje = new Date();
+  const ano = hoje.getFullYear();
+  const mes = String(hoje.getMonth() + 1).padStart(2, "0");
+  const dia = String(hoje.getDate()).padStart(2, "0");
+  return `${ano}-${mes}-${dia}`;
+}
+
+document.getElementById("doacaoData").max = hojeISO();
+document.getElementById("editDoacaoData").max = hojeISO();
+
+document.getElementById("modalNovaDoacao").addEventListener("show.bs.modal", () => {
+  document.getElementById("doacaoData").value = hojeISO();
+});
+
+document.getElementById("dataInteracao").max = hojeISO();
+document.getElementById("editDataInteracao").max = hojeISO();
+
+document.getElementById("modalNovaInteracao").addEventListener("show.bs.modal", () => {
+  document.getElementById("dataInteracao").value = hojeISO();
+});
 
 async function addDoador() {
   const nome = document.getElementById("doadorNome").value.trim();
@@ -183,12 +227,61 @@ async function addDoador() {
   const endereco = document.getElementById("doadorEndereco").value;
   const email = document.getElementById("doadorEmail").value || ""; // opcional
 
-  if (!nome) return alert("Informe o nome do doador!");
+  if (!nome) {
+    return Swal.fire({
+      icon: "error",
+      title: "Informe o nome do doador!",
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+  }
+
+  if (email && !/^\S+@\S+\.\S+$/.test(email)) {
+    return Swal.fire({
+      icon: "error",
+      title: "E-mail inválido",
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+  }
+
+  const cpfDigitos = apenasDigitos(cpf);
+  if (cpfDigitos && cpfDigitos.length !== 11 && cpfDigitos.length !== 14) {
+    return Swal.fire({
+      icon: "error",
+      title: "CPF/CNPJ inválido",
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+  }
 
   const { error } = await supabaseClient
     .from("doador_novo")
     .insert({ nome, telefone, cpf_cnpj: cpf, endereco, email });
-  if (error) return alert("Erro: " + error.message);
+  if (error) {
+    return Swal.fire({
+      icon: "error",
+      title: "Erro ao salvar, tente novamente: " + error.message,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+  }
 
   fecharModal("modalNovoDoador", "formNovoDoador");
   loadDoadores();
@@ -218,7 +311,45 @@ async function salvarEdicaoDoador() {
   const endereco = document.getElementById("editDoadorEndereco").value;
   const email = document.getElementById("editDoadorEmail").value;
 
-  if (!nome) return alert("Informe o nome do doador!");
+  if (!nome) {
+    return Swal.fire({
+      icon: "error",
+      title: "Informe o nome do doador!",
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+  }
+
+  if (email && !/^\S+@\S+\.\S+$/.test(email)) {
+    return Swal.fire({
+      icon: "error",
+      title: "E-mail inválido",
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+  }
+
+  const cpfDigitos = apenasDigitos(cpf);
+  if (cpfDigitos && cpfDigitos.length !== 11 && cpfDigitos.length !== 14) {
+    return Swal.fire({
+      icon: "error",
+      title: "CPF/CNPJ inválido",
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+  }
 
   const { error } = await supabaseClient
     .from("doador_novo")
@@ -277,12 +408,14 @@ async function loadDoacoes() {
     tbody.innerHTML += `<tr>
       <td>${d.id_doacao}</td>
       <td>${d.id_doador}</td>
-      <td>${d.valor}</td>
-      <td>${d.data_doacao || ""}</td>
-      <td>${d.status || ""}</td>
+      <td><strong>R$</strong> ${d.valor}</td>
+      <td>${formatarData(d.data_doacao)}</td>
+      <td>${badgeStatus(d.status)}</td>
       <td class="actions-td">
-        <primary-button icon="fi fi-rr-pencil" className="btn btn-outline-secondary" data-onclick="updateDoacao(${d.id_doacao})"></primary-button>
-        <primary-button icon="fi fi-rr-trash" className="btn-danger" data-onclick="deleteDoacao(${d.id_doacao})"></primary-button>
+        <div class="actions-content">
+          <primary-button icon="fi fi-rr-pencil" className="btn btn-outline-secondary" data-onclick="updateDoacao(${d.id_doacao})"></primary-button>
+          <primary-button icon="fi fi-rr-trash" className="btn-danger" data-onclick="deleteDoacao(${d.id_doacao})"></primary-button>
+        </div>
       </td>
     </tr>`;
   });
@@ -294,18 +427,62 @@ async function addDoacao() {
   const forma = document.getElementById("doacaoForma").value;
   const idDoador = document.getElementById("idDoador").value;
 
-  if (!idDoador) return alert("Informe o Id do Doador!");
+  if (!idDoador) {
+    return Swal.fire({
+      icon: "error",
+      title: "Informe o Id do Doador!",
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+  }
 
-  // Verificar se o ID do doador existe na tabela doadores
+  if (!valor || parseFloat(valor) <= 0) {
+    return Swal.fire({
+      icon: "error",
+      title: "Informe um valor válido maior que zero",
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+  }
+
+  if (dataDoacao && dataDoacao > hojeISO()) {
+    return Swal.fire({
+      icon: "error",
+      title: "A data da doação não pode ser no futuro",
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+  }
+
   const { data: doador, error: doadorError } = await supabaseClient
     .from("doador_novo")
-    .select("id_doador") // Seleciona todo o conteúdo (ou só "id_doador" para otimizar)
+    .select("id_doador")
     .eq("id_doador", idDoador)
     .single();
 
-  // Tratamento dos erros ou ausência do doador no banco
   if (doadorError || !doador) {
-    return alert("Doador não encontrado! Verifique o ID informado.");
+    return Swal.fire({
+      icon: "error",
+      title: "Doador não encontrado! Verifique o ID informado.",
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
   }
 
   const { error } = await supabaseClient.from("doacao_nova").insert({
@@ -314,27 +491,100 @@ async function addDoacao() {
     data_doacao: dataDoacao,
     forma_pagamento: forma,
   });
-  if (error) return alert("Erro: " + error.message);
+  if (error) {
+    return Swal.fire({
+      icon: "error",
+      title: "Erro ao salvar, tente novamente: " + error.message,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+  }
 
   fecharModal("modalNovaDoacao", "formNovaDoacao");
   loadDoacoes();
 }
 
-async function updateDoacao(id) {
-  const valor = prompt("Novo valor:");
-  const forma = prompt("Nova forma de pagamento:");
-  const status = prompt("Novo status:");
+function updateDoacao(id) {
+  const doacao = doacoesData.find((d) => d.id_doacao === id);
+  if (!doacao) return alert("Doação não encontrada no cache. Recarregue a página.");
 
-  const updateData = {};
-  if (valor) updateData.valor = parseFloat(valor);
-  if (forma) updateData.forma_pagamento = forma;
-  if (status) updateData.status = status;
+  document.getElementById("editDoacaoId").value = doacao.id_doacao;
+  document.getElementById("editDoacaoValor").value = doacao.valor || "";
+  document.getElementById("editDoacaoData").value = doacao.data_doacao || "";
+  document.getElementById("editDoacaoForma").value = doacao.forma_pagamento || "";
+  document.getElementById("editDoacaoStatus").value = doacao.status || "";
+
+  bootstrap.Modal.getOrCreateInstance(
+    document.getElementById("modalEditarDoacao"),
+  ).show();
+}
+
+async function salvarEdicaoDoacao() {
+  const id = document.getElementById("editDoacaoId").value;
+  const valor = document.getElementById("editDoacaoValor").value;
+  const dataDoacao = document.getElementById("editDoacaoData").value;
+  const forma = document.getElementById("editDoacaoForma").value;
+  const status = document.getElementById("editDoacaoStatus").value;
+
+  if (!valor || parseFloat(valor) <= 0) {
+    return Swal.fire({
+      icon: "error",
+      title: "Informe um valor válido maior que zero",
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+  }
+
+  if (dataDoacao && dataDoacao > hojeISO()) {
+    return Swal.fire({
+      icon: "error",
+      title: "A data da doação não pode ser no futuro",
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+  }
 
   const { error } = await supabaseClient
     .from("doacao_nova")
-    .update(updateData)
+    .update({ valor: parseFloat(valor), data_doacao: dataDoacao, forma_pagamento: forma, status })
     .eq("id_doacao", id);
-  if (error) return alert("Erro: " + error.message);
+  if (error) {
+    return Swal.fire({
+      icon: "error",
+      title: "Erro ao salvar, tente novamente: " + error.message,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+  }
+
+  Swal.fire({
+    icon: "success",
+    title: "Informações salvas!",
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 1500,
+    timerProgressBar: true,
+    toast: true,
+    animation: true,
+  });
+
+  fecharModal("modalEditarDoacao", "formEditarDoacao");
   loadDoacoes();
 }
 
@@ -365,14 +615,15 @@ async function loadInteracoes() {
   tbody.innerHTML = "";
   data.forEach((i) => {
     tbody.innerHTML += `<tr>
-      <td>${i.id_interacao}</td>
       <td>${i.id_doador || ""}</td>
       <td>${i.tipo_interacao}</td>
       <td>${i.observacoes || ""}</td>
-      <td>${i.data_interacao}</td>
+      <td>${formatarData(i.data_interacao)}</td>
       <td class="actions-td">
-        <primary-button icon="fi fi-rr-pencil" className="btn btn-outline-secondary" data-onclick="updateInteracaoNova(${i.id_interacao})"></primary-button>
-        ${isAdmin ? `<primary-button icon="fi fi-rr-trash" className="btn-danger" data-onclick="deleteInteracaoNova(${i.id_interacao})"></primary-button>` : ""}
+        <div class="actions-content">
+          <primary-button icon="fi fi-rr-pencil" className="btn btn-outline-secondary" data-onclick="updateInteracaoNova(${i.id_interacao})"></primary-button>
+          ${isAdmin ? `<primary-button icon="fi fi-rr-trash" className="btn-danger" data-onclick="deleteInteracaoNova(${i.id_interacao})"></primary-button>` : ""}
+        </div>
       </td>
     </tr>`;
   });
@@ -381,20 +632,65 @@ async function loadInteracoes() {
 async function addInteracaoNova() {
   const tipo = document.getElementById("tipoInteracao").value;
   const obs = document.getElementById("observacoes").value;
+  const dataInteracao = document.getElementById("dataInteracao").value;
   const idDoador = document.getElementById("idDoadorInteracao").value || "";
 
-  if (!idDoador) return alert("Informe o ID do Doador!");
+  if (!idDoador) {
+    return Swal.fire({
+      icon: "error",
+      title: "Informe o ID do Doador!",
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+  }
 
-  // Verificar se o ID do doador existe na tabela doadores
+  if (!tipo) {
+    return Swal.fire({
+      icon: "error",
+      title: "Informe o tipo da interação",
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+  }
+
+  if (dataInteracao && dataInteracao > hojeISO()) {
+    return Swal.fire({
+      icon: "error",
+      title: "A data da interação não pode ser no futuro",
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+  }
+
   const { data: doador, error: doadorError } = await supabaseClient
     .from("doador_novo")
-    .select("id_doador") // Seleciona todo o conteúdo (ou só "id_doador" para otimizar)
+    .select("id_doador")
     .eq("id_doador", idDoador)
     .single();
 
-  // Tratamento dos erros ou ausência do doador no banco
   if (doadorError || !doador) {
-    return alert("Doador não encontrado! Verifique o ID informado.");
+    return Swal.fire({
+      icon: "error",
+      title: "Doador não encontrado! Verifique o ID informado.",
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
   }
 
   const { error } = await supabaseClient.from("interacao_nova").insert({
@@ -402,32 +698,152 @@ async function addInteracaoNova() {
     id_usuario: currentUser.id,
     tipo_interacao: tipo,
     observacoes: obs,
+    data_interacao: dataInteracao,
   });
-  if (error) return alert("Erro: " + error.message);
+  if (error) {
+    return Swal.fire({
+      icon: "error",
+      title: "Erro ao salvar, tente novamente: " + error.message,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+  }
 
   Swal.fire({
     icon: "success",
-    title: "Successo!",
-    text: "Interação adicionada com sucesso!",
-    position: "top-right",
+    title: "Informações salvas!",
+    position: "top-end",
     showConfirmButton: false,
     timer: 1500,
     timerProgressBar: true,
     toast: true,
+    animation: true,
   });
 
   fecharModal("modalNovaInteracao", "formNovaInteracao");
   loadInteracoes();
 }
 
-async function updateInteracaoNova(id) {
-  const tipo = prompt("Novo tipo:");
-  const obs = prompt("Nova observação:");
+function updateInteracaoNova(id) {
+  const interacao = interacoesData.find((i) => i.id_interacao === id);
+  if (!interacao) return alert("Interação não encontrada no cache. Recarregue a página.");
+
+  document.getElementById("editInteracaoId").value = interacao.id_interacao;
+  document.getElementById("editIdDoadorInteracao").value = interacao.id_doador || "";
+  document.getElementById("editTipoInteracao").value = interacao.tipo_interacao || "";
+  document.getElementById("editObservacoes").value = interacao.observacoes || "";
+  document.getElementById("editDataInteracao").value = interacao.data_interacao
+    ? interacao.data_interacao.split("T")[0]
+    : "";
+
+  bootstrap.Modal.getOrCreateInstance(
+    document.getElementById("modalEditarInteracao"),
+  ).show();
+}
+
+async function salvarEdicaoInteracao() {
+  const id = document.getElementById("editInteracaoId").value;
+  const idDoador = document.getElementById("editIdDoadorInteracao").value;
+  const tipo = document.getElementById("editTipoInteracao").value;
+  const obs = document.getElementById("editObservacoes").value;
+  const dataInteracao = document.getElementById("editDataInteracao").value;
+
+  if (!idDoador) {
+    return Swal.fire({
+      icon: "error",
+      title: "Informe o ID do Doador!",
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+  }
+
+  if (!tipo) {
+    return Swal.fire({
+      icon: "error",
+      title: "Informe o tipo da interação",
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+  }
+
+  if (dataInteracao && dataInteracao > hojeISO()) {
+    return Swal.fire({
+      icon: "error",
+      title: "A data da interação não pode ser no futuro",
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+  }
+
+  const { data: doador, error: doadorError } = await supabaseClient
+    .from("doador_novo")
+    .select("id_doador")
+    .eq("id_doador", idDoador)
+    .single();
+
+  if (doadorError || !doador) {
+    return Swal.fire({
+      icon: "error",
+      title: "Doador não encontrado! Verifique o ID informado.",
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+  }
+
   const { error } = await supabaseClient
     .from("interacao_nova")
-    .update({ tipo_interacao: tipo, observacoes: obs })
+    .update({
+      id_doador: parseInt(idDoador),
+      tipo_interacao: tipo,
+      observacoes: obs,
+      data_interacao: dataInteracao,
+    })
     .eq("id_interacao", id);
-  if (error) return alert("Erro: " + error.message);
+  if (error) {
+    return Swal.fire({
+      icon: "error",
+      title: "Erro ao salvar, tente novamente: " + error.message,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+  }
+
+  Swal.fire({
+    icon: "success",
+    title: "Informações salvas!",
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 1500,
+    timerProgressBar: true,
+    toast: true,
+    animation: true,
+  });
+
+  fecharModal("modalEditarInteracao", "formEditarInteracao");
   loadInteracoes();
 }
 

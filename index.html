@@ -304,7 +304,10 @@
                   </div>
                   <div class="mb-3">
                     <label for="doacaoValor" class="form-label">Valor</label>
-                    <input type="number" class="form-control" id="doacaoValor" placeholder="Valor">
+                    <div class="input-group">
+                      <span class="input-group-text">R$</span>
+                      <input type="number" step="0.01" class="form-control" id="doacaoValor" placeholder="Valor">
+                    </div>
                   </div>
                   <div class="mb-3">
                     <label for="doacaoData" class="form-label">Data</label>
@@ -320,6 +323,53 @@
                 <primary-button label="Cancelar" className="btn btn-ghost me-auto"
                   data-bs-dismiss="modal"></primary-button>
                 <primary-button label="Salvar" className="btn btn-success" data-onclick="addDoacao()"></primary-button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal: Editar Doação -->
+        <div class="modal fade" id="modalEditarDoacao" tabindex="-1" aria-labelledby="modalEditarDoacaoLabel"
+          aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modalEditarDoacaoLabel">Editar Doação</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+              </div>
+              <div class="modal-body">
+                <form id="formEditarDoacao">
+                  <input type="hidden" id="editDoacaoId">
+                  <div class="mb-3">
+                    <label for="editDoacaoValor" class="form-label">Valor</label>
+                    <div class="input-group">
+                      <span class="input-group-text">R$</span>
+                      <input type="number" step="0.01" class="form-control" id="editDoacaoValor" placeholder="Valor">
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="editDoacaoData" class="form-label">Data</label>
+                    <input type="date" class="form-control" id="editDoacaoData">
+                  </div>
+                  <div class="mb-3">
+                    <label for="editDoacaoForma" class="form-label">Forma de Pagamento</label>
+                    <input type="text" class="form-control" id="editDoacaoForma" placeholder="Forma de Pagamento">
+                  </div>
+                  <div class="mb-3">
+                    <label for="editDoacaoStatus" class="form-label">Status</label>
+                    <select class="form-select" id="editDoacaoStatus">
+                      <option value="Pago">Pago</option>
+                      <option value="Pendente">Pendente</option>
+                      <option value="Não Pago">Não Pago</option>
+                    </select>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <primary-button label="Cancelar" className="btn btn-ghost me-auto"
+                  data-bs-dismiss="modal"></primary-button>
+                <primary-button label="Salvar" className="btn btn-success"
+                  data-onclick="salvarEdicaoDoacao()"></primary-button>
               </div>
             </div>
           </div>
@@ -365,7 +415,20 @@
                   </div>
                   <div class="mb-3">
                     <label for="tipoInteracao" class="form-label">Tipo</label>
-                    <input type="text" class="form-control" id="tipoInteracao" placeholder="Tipo">
+                    <select class="form-select" id="tipoInteracao">
+                      <option value="">Selecione o tipo</option>
+                      <option value="Mensagem">Mensagem</option>
+                      <option value="Ligação">Ligação</option>
+                      <option value="E-mail">E-mail</option>
+                      <option value="Redes Sociais">Redes Sociais</option>
+                      <option value="Visita presencial">Visita presencial</option>
+                      <option value="Conversa">Conversa</option>
+                      <option value="Outro">Outro</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label for="dataInteracao" class="form-label">Data</label>
+                    <input type="date" class="form-control" id="dataInteracao">
                   </div>
                   <div class="mb-3">
                     <label for="observacoes" class="form-label">Observações</label>
@@ -383,11 +446,59 @@
           </div>
         </div>
 
+        <!-- Modal: Editar Interação -->
+        <div class="modal fade" id="modalEditarInteracao" tabindex="-1" aria-labelledby="modalEditarInteracaoLabel"
+          aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modalEditarInteracaoLabel">Editar Interação</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+              </div>
+              <div class="modal-body">
+                <form id="formEditarInteracao">
+                  <input type="hidden" id="editInteracaoId">
+                  <div class="mb-3">
+                    <label for="editIdDoadorInteracao" class="form-label">ID do Doador</label>
+                    <input type="text" class="form-control" id="editIdDoadorInteracao" placeholder="ID do Doador">
+                  </div>
+                  <div class="mb-3">
+                    <label for="editTipoInteracao" class="form-label">Tipo</label>
+                    <select class="form-select" id="editTipoInteracao">
+                      <option value="">Selecione o tipo</option>
+                      <option value="Mensagem">Mensagem</option>
+                      <option value="Ligação">Ligação</option>
+                      <option value="E-mail">E-mail</option>
+                      <option value="Redes Sociais">Redes Sociais</option>
+                      <option value="Visita presencial">Visita presencial</option>
+                      <option value="Conversa">Conversa</option>
+                      <option value="Outro">Outro</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label for="editDataInteracao" class="form-label">Data</label>
+                    <input type="date" class="form-control" id="editDataInteracao">
+                  </div>
+                  <div class="mb-3">
+                    <label for="editObservacoes" class="form-label">Observações</label>
+                    <input type="text" class="form-control" id="editObservacoes" placeholder="Observações">
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <primary-button label="Cancelar" className="btn btn-ghost me-auto"
+                  data-bs-dismiss="modal"></primary-button>
+                <primary-button label="Salvar" className="btn btn-success"
+                  data-onclick="salvarEdicaoInteracao()"></primary-button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="table-responsive">
           <table id="interacaoTable">
             <thead>
               <tr>
-                <th>ID</th>
                 <th>Doador ID</th>
                 <th>Tipo</th>
                 <th>Obs</th>

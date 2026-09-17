@@ -12,6 +12,7 @@ h1 {
 
 table {
   width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
   margin-top: 10px;
 }
@@ -24,10 +25,14 @@ table th {
 table td {
   padding: 15px;
   border: 1px solid #ddd;
+  word-wrap: break-word;
 }
-table td.actions-td {
+
+.actions-content {
   display: flex;
+  align-items: center;
   gap: 8px;
+  height: 100%;
 }
 
 .table-responsive {

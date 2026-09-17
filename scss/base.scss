@@ -13,6 +13,7 @@ h1 {
 
 table {
     width: 100%;
+    table-layout: fixed;
     border-collapse: collapse;
     margin-top: $margin;
 
@@ -26,12 +27,16 @@ table {
     td {
         padding: $padding;
         border: 1px solid $border-color;
+        word-wrap: break-word;
     }
 
-    td.actions-td {
-        display: flex;
-        gap: 8px;
-    }
+}
+
+.actions-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 100%;
 }
 
 .table-responsive {

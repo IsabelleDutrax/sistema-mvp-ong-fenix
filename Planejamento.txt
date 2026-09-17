@@ -1,10 +1,12 @@
 Pra finalizar:
-- separar login do restante das páginas
-- transformar html e criar componentes modulares e reutilizaveis em JS mesmo
-- Transformar em React os componentes reutilizaveis: tabela, botão, card, tabs, inputs ...
+- separar login do restante das páginas - OK
+- transformar html e criar componentes modulares e reutilizaveis em JS mesmo - OK
+- Transformar em React os componentes reutilizaveis: tabela, botão, card, tabs, inputs ...(Botão OK)
 - Finalizar: 
-    - criar modais para edição e criação
-    - transformar inputs em selects para os modais
+    - criar modais para edição e criação - (OK)
+    - transformar inputs em selects para os modais 
+    - validar informações antes de enviar pro banco ()
+    - corrigir modais de criação e edição: adicionar campos faltantes (data da interação personalizavel)
 - Mudar banco de dados
 
 
@@ -12,3 +14,6 @@ Pra finalizar:
 Pro futuro:
 - Sistema de login com sessão e cadastrp
 - Aplicar os maxins do scss nos estilos pra simplificar  
+- Página doações: adicionar card com valor do último mês, média dos ultimos meses, um calendario interativo mostrando valores por dia
+- adicionar propriedade "Detalhes" pra tabela de doação
+- melhorar responsividade da tabela
