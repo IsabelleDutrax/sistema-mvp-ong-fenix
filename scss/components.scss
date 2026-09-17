@@ -9,8 +9,16 @@
 
     h2 {
         margin-top: 0;
-        color: $primary-color;
+        color: $ong-dark;
+        font-family: "Libre Baskerville", serif;
     }
+}
+
+.footer-credit {
+    text-align: center;
+    font-size: 0.75rem;
+    color: #ccc;
+    margin-top: $margin;
 }
 
 // Botões
@@ -36,9 +44,16 @@ button.secondary {
     }
 }
 
-button.btn-danger {
-    background-color: $danger-color;
+.btn-orange {
+    background-color: $ong-orange;
+    border-color: $ong-orange;
     color: white;
+
+    &:hover {
+        background-color: darken($ong-orange, 10%);
+        border-color: darken($ong-orange, 10%);
+        color: white;
+    }
 }
 
 // Botão "ghost": sem preenchimento nem borda, só texto (usado no Cancelar dos modais)
@@ -85,17 +100,23 @@ input {
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
 
     &:focus {
-        border-color: $primary-color;
-        box-shadow: 0 0 0 3px rgba($primary-color, 0.15);
+        border-color: $ong-orange;
+        box-shadow: 0 0 0 3px rgba($ong-orange, 0.15);
     }
 }
 
 // Modais do Bootstrap: zera a margem legada de "input, button" (definida no <style>
 // do index.html) para não conflitar com o espaçamento próprio dos componentes do Bootstrap
 .modal {
+    .modal-title {
+        font-family: "Libre Baskerville", serif;
+        color: $ong-dark;
+    }
+
     .form-label {
         font-size: 0.875rem;
         font-weight: 500;
+        margin-bottom: 0.2rem;
     }
 
     .form-control {

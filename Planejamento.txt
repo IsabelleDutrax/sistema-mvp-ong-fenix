@@ -8,7 +8,10 @@ Pra finalizar:
     - validar informações antes de enviar pro banco (OK)
     - corrigir modais de criação e edição: adicionar campos faltantes (data da interação personalizavel) - OK
     - adicionar logo da ong
-    - adicionar cores da Ong, identidade visual
+    - adicionar cores da Ong, identidade visual - OK
+    - add .ico pro navegador
+    - remover ids desnecessários das tabelas exp: id da interação na tabela interaçao
+    - validações antes de excluir infos das tabelas (excluir doador que fez doação)
 - Mudar banco de dados
 
 
@@ -17,5 +20,7 @@ Pro futuro:
 - Sistema de login com sessão e cadastrp
 - Aplicar os maxins do scss nos estilos pra simplificar  
 - Página doações: adicionar card com valor do último mês, média dos ultimos meses, um calendario interativo mostrando valores por dia
-- adicionar propriedade "Detalhes" pra tabela de doação
+- adicionar propriedade "Detalhes" pra tabela de doações
 - melhorar responsividade da tabela
+- adicionar data de criação e edição dos ddos na tabela
+- definir informações vistas ou nao por usuário não admin

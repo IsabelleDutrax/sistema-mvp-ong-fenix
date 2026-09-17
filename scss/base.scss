@@ -2,13 +2,13 @@ body {
     font-family: $font-stack;
     margin: 0;
     // padding: $padding;
-    background-color: #fafafa;
+    background-color: $bg-color;
     color: #333;
 }
 
 h1 {
     text-align: center;
-    color: $primary-color;
+    color: $ong-dark;
 }
 
 table {
@@ -31,6 +31,7 @@ table {
     }
 
 }
+
 
 .actions-content {
     display: flex;

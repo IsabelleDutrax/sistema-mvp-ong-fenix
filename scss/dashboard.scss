@@ -50,6 +50,7 @@
             padding: 10px 12px;
             margin-bottom: 4px;
             cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
 
             i {
                 width: 18px;
@@ -61,7 +62,7 @@
             }
 
             &.active {
-                background-color: #212529;
+                background-color: $ong-dark;
                 color: white;
             }
         }
@@ -84,9 +85,10 @@
             gap: 10px;
             color: #555;
             cursor: pointer;
+            transition: color 0.2s ease;
 
             &:hover {
-                color: $primary-color;
+                color: $ong-orange;
             }
         }
     }
@@ -97,7 +99,7 @@
     min-height: 0; // permite o overflow-y funcionar dentro do flex container
     padding: $padding * 2;
     overflow-y: auto;
-    background-color: #f8f9fa;
+    background-color: $bg-color;
     box-sizing: border-box;
 }
 
@@ -115,6 +117,7 @@
         margin: 0;
         font-size: 1.75rem;
         text-align: left;
+        font-family: "Libre Baskerville", serif;
     }
 
     p {

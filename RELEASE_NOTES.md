@@ -4,6 +4,25 @@ Histórico de mudanças do projeto, organizado por commit/entrega. Formato inspi
 
 
 
+## 2026-09-17 — Identidade visual da Ong (Fênix Conecta)
+### Adicionado
+- Sistema renomeado para "Fênix Conecta" (título de login e nome na sidebar), removida menção ao Supabase e o subtítulo "Login / Cadastro" da tela de login.
+- Fonte "Libre Baskerville" (Google Fonts) aplicada nos títulos: H1 (login e Dashboard), H2 das seções (Doadores/Doações/Interações) e título dos modais.
+- Logo da Ong exibida na tela de login, e como fundo do circulo de logo (login e sidebar), com borda na cor escura da marca.
+- Novas variáveis de cor da identidade visual: `$bg-color` (branco ovo, `#FFFDF6`), `$ong-dark` (`#010101`) e `$ong-orange` (`#FF5722`). Cores da identidade da Ong
+- Classe `.btn-orange` para os botões de ação principal (criar e salvar nos modais).
+- Transição + suave de 2s nas trocas de cor no hover dos botões e itens do menu, nas abas.
+### Alterado
+- Fundo das páginas (login e área principal) trocado para branco da ong.
+- Cor dos H1, do botão "Entrar", do item ativo do menu lateral e da borda do circulo trocada para `$ong-dark`.
+- Botões "Novo Doador/Doação/Interação +" e "Salvar" dos modais trocados de verde (`btn-success`) para `.btn-orange`.
+- Hover do link "Sair" trocado para laranja da ong #FF5722
+- Botões de excluir trocados da classe customizada `.btn-danger` para a classe nativa do Bootstrap (`btn btn-danger`), alinhando a cor com o badge "Não Pago" e ganhando o hover de graça.
+- Ícone do `<primary-button>` só ganha a margem `me-1` quando existe `label` junto (ícone sozinho fica sem espaçamento extra).
+### Corrigido
+- "Logado como" na sidebar aparecia vazio: faltava preencher `userEmailDisplay` com o e-mail do usuário após o login.
+- Hover ausente no botão de excluir (a classe customizada `.btn-danger` nunca teve um estado de hover definido).
+
 ## 2026-09-16 — Dropdown de doadores e selects nos formulários
 ### Adicionado
 - Campo "Id do Doador" (criação de Doação/Interação e edição de Interação) virou um dropdown mostrando "Nome (email)", em vez de digitar o ID de cabeça — preenchido a partir do cache de doadores já carregado.

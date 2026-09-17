@@ -13,7 +13,7 @@ let doadoresData = [];
 let doacoesData = [];
 let interacoesData = [];
 
-// ALternar visualização das páginas:
+// Alternar visualização das páginas:
 function showLogin() {
   document.getElementById("login-page").classList.remove("hidden");
   document.getElementById("app-shell").classList.add("hidden");
@@ -47,6 +47,7 @@ async function signIn() {
   showSystem();
 
   currentUser = data.user;
+  document.getElementById("userEmailDisplay").textContent = currentUser.email;
 
   // Checa se o usuário é admin
   const { data: doadorData } = await supabaseClient
@@ -152,7 +153,7 @@ function fecharModal(modalId, formId) {
 }
 
 // =========================
-// 🧑 DOADOR NOVO
+// DOADOR NOVO
 // =========================
 async function loadDoadores() {
   const { data, error } = await supabaseClient.from("doador_novo").select("*");
@@ -171,7 +172,7 @@ async function loadDoadores() {
       <td class="actions-td">
         <div class="actions-content">
           <primary-button icon="fi fi-rr-pencil" className="btn btn-outline-secondary" data-onclick="updateDoador(${d.id_doador})"></primary-button>
-          <primary-button icon="fi fi-rr-trash" className="btn-danger" data-onclick="deleteDoador(${d.id_doador})"></primary-button>
+          <primary-button icon="fi fi-rr-trash" className="btn btn-danger" data-onclick="deleteDoador(${d.id_doador})"></primary-button>
         </div>
       </td>
     </tr>`;
@@ -191,7 +192,10 @@ function preencherDropdownDoadores() {
   const opcoes =
     `<option value="" disabled selected>Selecione um doador</option>` +
     doadoresData
-      .map((d) => `<option value="${d.id_doador}">${d.nome} (${d.email || "sem email"})</option>`)
+      .map(
+        (d) =>
+          `<option value="${d.id_doador}">${d.nome} (${d.email || "sem email"})</option>`,
+      )
       .join("");
 
   document.getElementById("idDoador").innerHTML = opcoes;
@@ -226,16 +230,20 @@ function hojeISO() {
 document.getElementById("doacaoData").max = hojeISO();
 document.getElementById("editDoacaoData").max = hojeISO();
 
-document.getElementById("modalNovaDoacao").addEventListener("show.bs.modal", () => {
-  document.getElementById("doacaoData").value = hojeISO();
-});
+document
+  .getElementById("modalNovaDoacao")
+  .addEventListener("show.bs.modal", () => {
+    document.getElementById("doacaoData").value = hojeISO();
+  });
 
 document.getElementById("dataInteracao").max = hojeISO();
 document.getElementById("editDataInteracao").max = hojeISO();
 
-document.getElementById("modalNovaInteracao").addEventListener("show.bs.modal", () => {
-  document.getElementById("dataInteracao").value = hojeISO();
-});
+document
+  .getElementById("modalNovaInteracao")
+  .addEventListener("show.bs.modal", () => {
+    document.getElementById("dataInteracao").value = hojeISO();
+  });
 
 async function addDoador() {
   const nome = document.getElementById("doadorNome").value.trim();
@@ -306,7 +314,8 @@ async function addDoador() {
 
 function updateDoador(id) {
   const doador = doadoresData.find((d) => d.id_doador === id);
-  if (!doador) return alert("Doador não encontrado no cache. Recarregue a página.");
+  if (!doador)
+    return alert("Doador não encontrado no cache. Recarregue a página.");
 
   document.getElementById("editDoadorId").value = doador.id_doador;
   document.getElementById("editDoadorNome").value = doador.nome || "";
@@ -411,7 +420,7 @@ async function deleteDoador(id) {
 }
 
 // =========================
-// 💸 DOAÇÃO NOVA
+//  DOAÇÃO NOVA
 // =========================
 async function loadDoacoes() {
   const { data, error } = await supabaseClient.from("doacao_nova").select("*");
@@ -430,7 +439,7 @@ async function loadDoacoes() {
       <td class="actions-td">
         <div class="actions-content">
           <primary-button icon="fi fi-rr-pencil" className="btn btn-outline-secondary" data-onclick="updateDoacao(${d.id_doacao})"></primary-button>
-          <primary-button icon="fi fi-rr-trash" className="btn-danger" data-onclick="deleteDoacao(${d.id_doacao})"></primary-button>
+          <primary-button icon="fi fi-rr-trash" className="btn btn-danger" data-onclick="deleteDoacao(${d.id_doacao})"></primary-button>
         </div>
       </td>
     </tr>`;
@@ -526,12 +535,14 @@ async function addDoacao() {
 
 function updateDoacao(id) {
   const doacao = doacoesData.find((d) => d.id_doacao === id);
-  if (!doacao) return alert("Doação não encontrada no cache. Recarregue a página.");
+  if (!doacao)
+    return alert("Doação não encontrada no cache. Recarregue a página.");
 
   document.getElementById("editDoacaoId").value = doacao.id_doacao;
   document.getElementById("editDoacaoValor").value = doacao.valor || "";
   document.getElementById("editDoacaoData").value = doacao.data_doacao || "";
-  document.getElementById("editDoacaoForma").value = doacao.forma_pagamento || "";
+  document.getElementById("editDoacaoForma").value =
+    doacao.forma_pagamento || "";
   document.getElementById("editDoacaoStatus").value = doacao.status || "";
 
   bootstrap.Modal.getOrCreateInstance(
@@ -574,7 +585,12 @@ async function salvarEdicaoDoacao() {
 
   const { error } = await supabaseClient
     .from("doacao_nova")
-    .update({ valor: parseFloat(valor), data_doacao: dataDoacao, forma_pagamento: forma, status })
+    .update({
+      valor: parseFloat(valor),
+      data_doacao: dataDoacao,
+      forma_pagamento: forma,
+      status,
+    })
     .eq("id_doacao", id);
   if (error) {
     return Swal.fire({
@@ -615,7 +631,7 @@ async function deleteDoacao(id) {
 }
 
 // =========================
-// 📞 INTERAÇÃO NOVA
+// INTERAÇÃO NOVA (ong e doador)
 // =========================
 async function loadInteracoes() {
   console.log("load das interações");
@@ -638,7 +654,7 @@ async function loadInteracoes() {
       <td class="actions-td">
         <div class="actions-content">
           <primary-button icon="fi fi-rr-pencil" className="btn btn-outline-secondary" data-onclick="updateInteracaoNova(${i.id_interacao})"></primary-button>
-          ${isAdmin ? `<primary-button icon="fi fi-rr-trash" className="btn-danger" data-onclick="deleteInteracaoNova(${i.id_interacao})"></primary-button>` : ""}
+          ${isAdmin ? `<primary-button icon="fi fi-rr-trash" className="btn btn-danger" data-onclick="deleteInteracaoNova(${i.id_interacao})"></primary-button>` : ""}
         </div>
       </td>
     </tr>`;
@@ -746,12 +762,16 @@ async function addInteracaoNova() {
 
 function updateInteracaoNova(id) {
   const interacao = interacoesData.find((i) => i.id_interacao === id);
-  if (!interacao) return alert("Interação não encontrada no cache. Recarregue a página.");
+  if (!interacao)
+    return alert("Interação não encontrada no cache. Recarregue a página.");
 
   document.getElementById("editInteracaoId").value = interacao.id_interacao;
-  document.getElementById("editIdDoadorInteracao").value = interacao.id_doador || "";
-  document.getElementById("editTipoInteracao").value = interacao.tipo_interacao || "";
-  document.getElementById("editObservacoes").value = interacao.observacoes || "";
+  document.getElementById("editIdDoadorInteracao").value =
+    interacao.id_doador || "";
+  document.getElementById("editTipoInteracao").value =
+    interacao.tipo_interacao || "";
+  document.getElementById("editObservacoes").value =
+    interacao.observacoes || "";
   document.getElementById("editDataInteracao").value = interacao.data_interacao
     ? interacao.data_interacao.split("T")[0]
     : "";
@@ -876,7 +896,7 @@ async function deleteInteracaoNova(id) {
 }
 
 // =========================
-// 🚀 Load inicial
+// Load inicial do sistema
 // =========================
 async function loadData() {
   await loadDoadores();
@@ -935,8 +955,8 @@ function primaryButton({
 }) {
   return `
     <button type="button" ${id ? `id="${id}"` : ""} ${title ? `title="${title}"` : ""} class="${className}" ${onClick ? `onclick="${onClick}"` : ""} ${disabled ? "disabled" : ""}>
-        ${icon ? `<i ${iconId ? `id="${iconId}"` : ""} class="${icon}"></i>` : ""}
-        ${label ? `<span class="ms-1">${label}</span>` : ""}
+        ${icon ? `<i ${iconId ? `id="${iconId}"` : ""} class="${icon}${label ? " me-1" : ""}"></i>` : ""}
+        ${label ? `<span class="">${label}</span>` : ""}
     </button>
   `;
 }
