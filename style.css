@@ -202,7 +202,7 @@ input:focus {
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  background: #fff url("../img/Logo_fundo_branco.png") center/contain no-repeat;
+  background: #fff url("img/Logo_fundo_branco.png") center/contain no-repeat;
   border: 1px solid #010101;
   display: flex;
   align-items: center;
