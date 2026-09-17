@@ -2,6 +2,8 @@
 
 Histórico de mudanças do projeto, organizado por commit/entrega. Formato inspirado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
+
+
 ## [??] — 2026-09-16 — Componente de botão reutilizável + tabelas responsivas + tooling do Sass
 ### Adicionado
 - Suporte a `data-id` e `disabled` no componente `<primary-button>`, permitindo reaproveitá-lo em botões que precisam ser encontrados por id (ex: mostrar/ocultar senha) ou desabilitados dinamicamente.
@@ -15,6 +17,7 @@ Histórico de mudanças do projeto, organizado por commit/entrega. Formato inspi
 - Versão do `sass` fixada em `1.77.8` no `package.json` (a `1.101.0` exigia uma versão do Node mais nova que a instalada), restaurando o funcionamento de `build:css`/`watch:css`.
 - Menu lateral no modo mobile (`scss/dashboard.scss`) ajustado para empilhar os itens em coluna e ocupar a largura total.
 - Tabela de tecnologias do README reformatada e removida a linha de atribuição de IA no rodapé.
+- Modal de edição na tabela doadores com alert de sucesso e erro
 ### Corrigido
 - `TypeError` ao logar: `showSystem()`/`showLogin()` referenciavam um elemento `system-page` que não existe no HTML (o container correto é `app-shell`).
 - Toast de sucesso duplicado ao entrar: o atributo `onClick` do componente `<primary-button>` colidia com o atributo global `onclick` do navegador, disparando `signIn()` duas vezes; renomeado para `data-onclick`.

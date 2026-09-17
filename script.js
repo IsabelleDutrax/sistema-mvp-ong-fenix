@@ -194,25 +194,61 @@ async function addDoador() {
   loadDoadores();
 }
 
-async function updateDoador(id) {
-  const nome = prompt("Novo nome do doador:");
-  const telefone = prompt("Novo telefone:");
-  const cpf = prompt("Novo CPF/CNPJ:");
-  const endereco = prompt("Novo endereço:");
-  const email = prompt("Novo email (opcional):");
+function updateDoador(id) {
+  const doador = doadoresData.find((d) => d.id_doador === id);
+  if (!doador) return alert("Doador não encontrado no cache. Recarregue a página.");
 
-  const updateData = {};
-  if (nome) updateData.nome = nome;
-  if (telefone) updateData.telefone = telefone;
-  if (cpf) updateData.cpf_cnpj = cpf;
-  if (endereco) updateData.endereco = endereco;
-  if (email) updateData.email = email;
+  document.getElementById("editDoadorId").value = doador.id_doador;
+  document.getElementById("editDoadorNome").value = doador.nome || "";
+  document.getElementById("editDoadorTelefone").value = doador.telefone || "";
+  document.getElementById("editDoadorCpf").value = doador.cpf_cnpj || "";
+  document.getElementById("editDoadorEndereco").value = doador.endereco || "";
+  document.getElementById("editDoadorEmail").value = doador.email || "";
+
+  bootstrap.Modal.getOrCreateInstance(
+    document.getElementById("modalEditarDoador"),
+  ).show();
+}
+
+async function salvarEdicaoDoador() {
+  const id = document.getElementById("editDoadorId").value;
+  const nome = document.getElementById("editDoadorNome").value.trim();
+  const telefone = document.getElementById("editDoadorTelefone").value;
+  const cpf = document.getElementById("editDoadorCpf").value;
+  const endereco = document.getElementById("editDoadorEndereco").value;
+  const email = document.getElementById("editDoadorEmail").value;
+
+  if (!nome) return alert("Informe o nome do doador!");
 
   const { error } = await supabaseClient
     .from("doador_novo")
-    .update(updateData)
+    .update({ nome, telefone, cpf_cnpj: cpf, endereco, email })
     .eq("id_doador", id);
-  if (error) return alert("Erro: " + error.message);
+  if (error) {
+    return Swal.fire({
+      icon: "error",
+      title: "Erro ao salvar, tente novamente: " + error.message,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+  }
+
+  Swal.fire({
+    icon: "success",
+    title: "Informações salvas!",
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 1500,
+    timerProgressBar: true,
+    toast: true,
+    animation: true,
+  });
+
+  fecharModal("modalEditarDoador", "formEditarDoador");
   loadDoadores();
 }
 
@@ -474,9 +510,6 @@ function primaryButton({
 }
 
 // Registrando a Tag Nativa
-// Atributos aceitos: label, title, className, icon, iconId, data-onclick, data-id, disabled
-// Atributos data-bs-toggle / data-bs-target / data-bs-dismiss (Bootstrap) podem ser colocados
-// direto na tag <primary-button>: o Bootstrap encontra o clique via closest() e funciona normalmente.
 customElements.define(
   "primary-button",
   class extends HTMLElement {

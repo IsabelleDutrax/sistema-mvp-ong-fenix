@@ -34,8 +34,6 @@ table {
     }
 }
 
-// Envolve as tabelas para permitir rolagem horizontal no celular,
-// em vez de espremer as colunas
 .table-responsive {
     width: 100%;
     overflow-x: auto;
