@@ -159,12 +159,12 @@ async function loadDoadores() {
   if (error) return console.error(error);
 
   doadoresData = data;
+  preencherDropdownDoadores();
 
   const tbody = document.querySelector("#doadorTable tbody");
   tbody.innerHTML = "";
   data.forEach((d) => {
     tbody.innerHTML += `<tr>
-      <td>${d.id_doador}</td>
       <td>${d.nome}</td>
       <td>${d.email || ""}</td>
       <td>${d.telefone || ""}</td>
@@ -180,6 +180,23 @@ async function loadDoadores() {
 
 function apenasDigitos(texto) {
   return texto.replace(/\D/g, "");
+}
+
+function nomeDoador(idDoador) {
+  const doador = doadoresData.find((d) => d.id_doador === idDoador);
+  return doador ? `${doador.nome} (${doador.email || "sem email"})` : "-";
+}
+
+function preencherDropdownDoadores() {
+  const opcoes =
+    `<option value="" disabled selected>Selecione um doador</option>` +
+    doadoresData
+      .map((d) => `<option value="${d.id_doador}">${d.nome} (${d.email || "sem email"})</option>`)
+      .join("");
+
+  document.getElementById("idDoador").innerHTML = opcoes;
+  document.getElementById("idDoadorInteracao").innerHTML = opcoes;
+  document.getElementById("editIdDoadorInteracao").innerHTML = opcoes;
 }
 
 function badgeStatus(status) {
@@ -406,9 +423,8 @@ async function loadDoacoes() {
   tbody.innerHTML = "";
   data.forEach((d) => {
     tbody.innerHTML += `<tr>
-      <td>${d.id_doacao}</td>
-      <td>${d.id_doador}</td>
-      <td><strong>R$</strong> ${d.valor}</td>
+      <td>${nomeDoador(d.id_doador)}</td>
+      <td>R$ <strong>${d.valor}</strong></td>
       <td>${formatarData(d.data_doacao)}</td>
       <td>${badgeStatus(d.status)}</td>
       <td class="actions-td">
@@ -615,7 +631,7 @@ async function loadInteracoes() {
   tbody.innerHTML = "";
   data.forEach((i) => {
     tbody.innerHTML += `<tr>
-      <td>${i.id_doador || ""}</td>
+      <td>${nomeDoador(i.id_doador)}</td>
       <td>${i.tipo_interacao}</td>
       <td>${i.observacoes || ""}</td>
       <td>${formatarData(i.data_interacao)}</td>

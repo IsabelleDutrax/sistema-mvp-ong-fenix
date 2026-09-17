@@ -4,6 +4,16 @@ Histórico de mudanças do projeto, organizado por commit/entrega. Formato inspi
 
 
 
+## 2026-09-16 — Dropdown de doadores e selects nos formulários
+### Adicionado
+- Campo "Id do Doador" (criação de Doação/Interação e edição de Interação) virou um dropdown mostrando "Nome (email)", em vez de digitar o ID de cabeça — preenchido a partir do cache de doadores já carregado.
+- "Forma de Pagamento" da Doação virou um dropdown (Pix, Boleto, Transferência, Dinheiro em espécie, Débito, Prestação de serviço).
+- Placeholders dos selects (ex: "Selecione um doador", "Selecione o tipo") marcados como desabilitados, pra não dar pra selecionar de volta depois de escolher um valor real.
+### Alterado
+- Tabelas de Doador e Doação: coluna "ID" removida.
+- Tabelas de Doação e Interação: coluna "Doador" mostra "Nome (email)" em vez do ID cru.
+- Valor da doação na tabela: só o número fica em negrito, o "R$" fica normal.
+
 ## 2026-09-16 — Modais de edição (CRUD completo), validações e refinamentos das tabelas
 ### Adicionado
 - Modais de edição (Bootstrap msm) pra doação e interação, já usado na tabela doadores.
@@ -23,25 +33,25 @@ Histórico de mudanças do projeto, organizado por commit/entrega. Formato inspi
 
 ## 2026-09-16 — Componente de botão reutilizável + tabelas responsivas + tooling do Sass
 ### Adicionado
-- Suporte a `data-id` e `disabled` no componente `<primary-button>`, permitindo reaproveitá-lo em botões que precisam ser encontrados por id (ex: mostrar/ocultar senha) ou desabilitados dinamicamente.
+- Suporte a `data-id` e `disabled` no componente 'primary-button', permitindo reaproveitá-lo em botões que precisam ser encontrados por id (ex: mostrar/ocultar senha) ou desabilitados dinamicamente.
 - Classe `.btn-danger` (fundo vermelho) para os botões de excluir.
 - Tabelas de Doadores/Doações/Interações envolvidas em `.table-responsive`, com rolagem horizontal no mobile em vez de espremer as colunas.
 - Classe `.actions-td` na última coluna das tabelas (ícones de editar/excluir), com `display: flex` e espaçamento entre os botões.
 - Tarefa do VS Code (`.vscode/tasks.json`) que inicia o `watch:css` automaticamente ao abrir o projeto.
 ### Alterado
-- Todos os botões de ação (login, salvar, cancelar, abrir modal, editar, excluir) convertidos para usar o componente `<primary-button>` de forma consistente.
+- Todos os botões de ação (login, salvar, cancelar, abrir modal, editar, excluir) convertidos para usar o componente 'primary-button' de forma consistente.
 - Botões de editar (lápis) com estilo "ghost" do Bootstrap (`btn btn-outline-secondary`).
-- Versão do `sass` fixada em `1.77.8` no `package.json` (a `1.101.0` exigia uma versão do Node mais nova que a instalada), restaurando o funcionamento de `build:css`/`watch:css`.
+- Versão do `sass` fixada em `1.77.8` no `package.json` (a `1.101.0` exigia uma versão do Node mais nova que a instalada), restaurando o funcionamento de `build:css` e `watch:css`.
 - Menu lateral no modo mobile (`scss/dashboard.scss`) ajustado pra empilhar os itens em coluna e ocupar a largura total.
 - Tabela de tecnologias do README reformatada e removida a linha de atribuição de IA no rodapé.
 - Modal de edição das tabelas com alert de sucesso e erro
 ### Corrigido
 - `TypeError` ao logar: `showSystem()`/`showLogin()` referenciavam um elemento `system-page` que não existe no HTML (o container correto é `app-shell`).
-- Toast de sucesso duplicado ao entrar: o atributo `onClick` do componente `<primary-button>` colidia com o atributo global `onclick` do navegador, disparando `signIn()` duas vezes; renomeado para `data-onclick`.
+- Toast de sucesso duplicado ao entrar: o atributo onClick do componente 'primary-button' colidia com o atributo global onclick do navegador, disparando `signIn()` duas vezes; renomeado para `data-onclick`.
 
 ## 2026-07-16 — Dashboard com sidebar + refinamentos dos modais
 ### Adicionado
-- Página de Dashboard (dentro do próprio `index.html`) com sidebar fixa (Dashboard/Doadores/Doações/Interações/Sair) e 4 cards de estatística (total arrecadado, doadores, doações e interações), calculados a partir dos dados do Supabase.
+- Página de Dashboard (dentro do próprio index html) com sidebar fixa (Dashboard/Doadores/Doações/Interações/Sair) e 4 cards de estatística (total arrecadado, doadores, doações e interações), calculados a partir dos dados do Supabase.
 - Navegação por página única: só uma seção fica visível por vez, trocada ao clicar na sidebar (`showPage()`), substituindo a antiga barra "Logado como..." e as três seções empilhadas.
 - Layout responsivo: sidebar vira barra horizontal em telas pequenas.
 ### Alterado
@@ -74,7 +84,7 @@ Histórico de mudanças do projeto, organizado por commit/entrega. Formato inspi
 
 ## 2025-12-16 — mudei caminho style
 ### Corrigido
-- Caminho de referência do `style.css` no `index.html`.
+- Caminho de referência do `style.css` no index html.
 
 ## 2025-12-16 — Correção lógica de funcionalidades + validação + estilos + README
 ### Adicionado

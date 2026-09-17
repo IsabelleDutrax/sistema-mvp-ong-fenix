@@ -269,7 +269,6 @@
           <table id="doadorTable">
             <thead>
               <tr>
-                <th>ID</th>
                 <th>Nome</th>
                 <th>Email</th>
                 <th>Telefone</th>
@@ -299,8 +298,10 @@
               <div class="modal-body">
                 <form id="formNovaDoacao">
                   <div class="mb-3">
-                    <label for="idDoador" class="form-label">Id do Doador</label>
-                    <input type="text" class="form-control" id="idDoador" placeholder="Id do Doador" required>
+                    <label for="idDoador" class="form-label">Doador</label>
+                    <select class="form-select" id="idDoador" required>
+                      <option value="" disabled selected>Selecione um doador</option>
+                    </select>
                   </div>
                   <div class="mb-3">
                     <label for="doacaoValor" class="form-label">Valor</label>
@@ -315,7 +316,15 @@
                   </div>
                   <div class="mb-3">
                     <label for="doacaoForma" class="form-label">Forma de Pagamento</label>
-                    <input type="text" class="form-control" id="doacaoForma" placeholder="Forma de Pagamento">
+                    <select class="form-select" id="doacaoForma">
+                      <option value="" disabled selected>Selecione a forma de pagamento</option>
+                      <option value="Pix">Pix</option>
+                      <option value="Boleto">Boleto</option>
+                      <option value="Transferência">Transferência</option>
+                      <option value="Dinheiro em espécie">Dinheiro em espécie</option>
+                      <option value="Débito">Débito</option>
+                      <option value="Prestação de serviço">Prestação de serviço</option>
+                    </select>
                   </div>
                 </form>
               </div>
@@ -353,7 +362,15 @@
                   </div>
                   <div class="mb-3">
                     <label for="editDoacaoForma" class="form-label">Forma de Pagamento</label>
-                    <input type="text" class="form-control" id="editDoacaoForma" placeholder="Forma de Pagamento">
+                    <select class="form-select" id="editDoacaoForma">
+                      <option value="" disabled selected>Selecione a forma de pagamento</option>
+                      <option value="Pix">Pix</option>
+                      <option value="Boleto">Boleto</option>
+                      <option value="Transferência">Transferência</option>
+                      <option value="Dinheiro em espécie">Dinheiro em espécie</option>
+                      <option value="Débito">Débito</option>
+                      <option value="Prestação de serviço">Prestação de serviço</option>
+                    </select>
                   </div>
                   <div class="mb-3">
                     <label for="editDoacaoStatus" class="form-label">Status</label>
@@ -379,7 +396,6 @@
           <table id="doacaoTable">
             <thead>
               <tr>
-                <th>ID</th>
                 <th>Doador</th>
                 <th>Valor</th>
                 <th>Data</th>
@@ -410,13 +426,15 @@
               <div class="modal-body">
                 <form id="formNovaInteracao">
                   <div class="mb-3">
-                    <label for="idDoadorInteracao" class="form-label">ID do Doador</label>
-                    <input type="text" class="form-control" id="idDoadorInteracao" placeholder="ID do Doador" required>
+                    <label for="idDoadorInteracao" class="form-label">Doador</label>
+                    <select class="form-select" id="idDoadorInteracao" required>
+                      <option value="" disabled selected>Selecione um doador</option>
+                    </select>
                   </div>
                   <div class="mb-3">
                     <label for="tipoInteracao" class="form-label">Tipo</label>
                     <select class="form-select" id="tipoInteracao">
-                      <option value="">Selecione o tipo</option>
+                      <option value="" disabled selected>Selecione o tipo</option>
                       <option value="Mensagem">Mensagem</option>
                       <option value="Ligação">Ligação</option>
                       <option value="E-mail">E-mail</option>
@@ -459,13 +477,15 @@
                 <form id="formEditarInteracao">
                   <input type="hidden" id="editInteracaoId">
                   <div class="mb-3">
-                    <label for="editIdDoadorInteracao" class="form-label">ID do Doador</label>
-                    <input type="text" class="form-control" id="editIdDoadorInteracao" placeholder="ID do Doador">
+                    <label for="editIdDoadorInteracao" class="form-label">Doador</label>
+                    <select class="form-select" id="editIdDoadorInteracao">
+                      <option value="" disabled selected>Selecione um doador</option>
+                    </select>
                   </div>
                   <div class="mb-3">
                     <label for="editTipoInteracao" class="form-label">Tipo</label>
                     <select class="form-select" id="editTipoInteracao">
-                      <option value="">Selecione o tipo</option>
+                      <option value="" disabled selected>Selecione o tipo</option>
                       <option value="Mensagem">Mensagem</option>
                       <option value="Ligação">Ligação</option>
                       <option value="E-mail">E-mail</option>
@@ -499,7 +519,7 @@
           <table id="interacaoTable">
             <thead>
               <tr>
-                <th>Doador ID</th>
+                <th>Doador</th>
                 <th>Tipo</th>
                 <th>Obs</th>
                 <th>Data</th>

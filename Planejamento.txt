@@ -4,9 +4,11 @@ Pra finalizar:
 - Transformar em React os componentes reutilizaveis: tabela, botão, card, tabs, inputs ...(Botão OK)
 - Finalizar: 
     - criar modais para edição e criação - (OK)
-    - transformar inputs em selects para os modais 
-    - validar informações antes de enviar pro banco ()
-    - corrigir modais de criação e edição: adicionar campos faltantes (data da interação personalizavel)
+    - transformar inputs em selects para os modais  - OK
+    - validar informações antes de enviar pro banco (OK)
+    - corrigir modais de criação e edição: adicionar campos faltantes (data da interação personalizavel) - OK
+    - adicionar logo da ong
+    - adicionar cores da Ong, identidade visual
 - Mudar banco de dados
 
 
