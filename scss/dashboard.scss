@@ -176,6 +176,8 @@
         padding: $padding;
         overflow-x: auto;
         overflow-y: hidden;
+        flex-direction: column;
+        display: flex;
 
         .sidebar-brand {
             display: none;
@@ -185,6 +187,7 @@
             display: flex;
             flex-direction: row;
             padding: 0;
+            width: 100%;
 
             .nav-link {
                 white-space: nowrap;

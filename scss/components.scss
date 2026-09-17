@@ -36,6 +36,12 @@ button.secondary {
     }
 }
 
+// Botão de ação destrutiva (excluir): fundo vermelho
+button.btn-danger {
+    background-color: $danger-color;
+    color: white;
+}
+
 // Botão "ghost": sem preenchimento nem borda, só texto (usado no Cancelar dos modais)
 button.btn-ghost {
     background-color: transparent;
@@ -64,6 +70,12 @@ button.btn-icon {
         opacity: 0.4;
         cursor: not-allowed;
     }
+}
+
+// Componente <primary-button>: some do layout, deixando só o <button> real
+// dentro dele visível, para não afetar o posicionamento onde for usado
+primary-button {
+    display: contents;
 }
 
 // Inputs

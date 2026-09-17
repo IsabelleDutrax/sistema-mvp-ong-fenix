@@ -65,15 +65,15 @@ O sistema inclui uma interface simples e intuitiva com botões estilizados e íc
 ⚙️ **Tecnologias Utilizadas**
 -----------------------------
 
-| Tecnologia | Descrição |
-| --- | --- |
-| **HTML** | Estruturação da aplicação. |
-| **CSS/SCSS** | Estilização aprimorada com o uso de mixins, variáveis e estrutura modular do SCSS. |
-| **JavaScript** | Lógica e interação do cliente (frontend). |
-| **Supabase** | Backend como serviço para banco de dados, autenticação e APIs. |
+| Tecnologia      | Descrição                                                                                                                                                                       |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **HTML**        | Estruturação da aplicação.                                                                                                                                                      |
+| **CSS/SCSS**    | Estilização aprimorada com o uso de mixins, variáveis e estrutura modular do SCSS.                                                                                              |
+| **JavaScript**  | Lógica e interação do cliente (frontend).                                                                                                                                       |
+| **Supabase**    | Backend como serviço para banco de dados, autenticação e APIs.                                                                                                                  |
 | **Bootstrap 5** | Componentes de UI (modais e formulários) das telas de cadastro. Carregado via CDN, sem necessidade de build/bundler — ver seção [Modais (Bootstrap)](#modais-bootstrap) abaixo. |
-| **Flaticon** | Ícones responsivos e minimalistas para melhorar a interface do usuário. |
-| **SweetAlert2** | Alertas estilizados e responsivos nas interações do sistema. |
+| **Flaticon**    | Ícones responsivos e minimalistas para melhorar a interface do usuário.                                                                                                         |
+| **SweetAlert2** | Alertas estilizados e responsivos nas interações do sistema.                                                                                                                    |
 
 ### Modais (Bootstrap) {#modais-bootstrap}
 
@@ -171,5 +171,3 @@ Contribuições são bem-vindas! Aqui está como você pode ajudar:
     
 5.  Crie um Pull Request explicando sua contribuição.
 
----
-*Elaborado com suporte de IA — Revisado por [Nome do Responsável]*

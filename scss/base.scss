@@ -27,4 +27,23 @@ table {
         padding: $padding;
         border: 1px solid $border-color;
     }
+
+    td.actions-td {
+        display: flex;
+        gap: 8px;
+    }
+}
+
+// Envolve as tabelas para permitir rolagem horizontal no celular,
+// em vez de espremer as colunas
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 768px) {
+    .table-responsive table {
+        min-width: 600px;
+    }
 }

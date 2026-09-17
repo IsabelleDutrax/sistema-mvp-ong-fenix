@@ -69,17 +69,14 @@
           <div class="form-group">
             <div class="password-block">
               <input type="password" id="password" placeholder="Senha" oninput="toggleSenhaBtn()">
-              <button id="btn-toggle-senha" class="btn-icon" type="button" title="Ver ou ocultar senha"
-                onclick="viewSenha()" disabled>
-                <i id="icon-password" class="fi fi-rr-eye-crossed"></i>
-              </button>
+              <primary-button data-id="btn-toggle-senha" className="btn-icon" title="Ver ou ocultar senha"
+                data-onclick="viewSenha()" icon="fi fi-rr-eye-crossed" iconId="icon-password"
+                disabled></primary-button>
 
             </div>
           </div>
 
-          <!-- Botão login teste com componente  -->
-          <button class="btn-block" onclick="signIn()">Entrar</button>
-          <primary-button label="Entrar" className="btn-block" onClick="signIn()"></primary-button>
+          <primary-button label="Entrar" className="btn-block" data-onclick="signIn()"></primary-button>
 
           <div class="auth-links">
             <a onclick="signUp()">Cadastrar</a>
@@ -180,9 +177,8 @@
       <!-- Doadores -->
       <div id="doador-section" class="app-page section hidden">
         <h2>Doadores</h2>
-        <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modalNovoDoador">
-          Novo Doador +
-        </button>
+        <primary-button label="Novo Doador +" className="btn btn-success mb-3" data-bs-toggle="modal"
+          data-bs-target="#modalNovoDoador"></primary-button>
 
         <!-- Modal: Novo Doador (Bootstrap 5) -->
         <div class="modal fade" id="modalNovoDoador" tabindex="-1" aria-labelledby="modalNovoDoadorLabel"
@@ -218,33 +214,36 @@
                 </form>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-ghost me-auto" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-success" onclick="addDoador()">Salvar</button>
+                <primary-button label="Cancelar" className="btn btn-ghost me-auto"
+                  data-bs-dismiss="modal"></primary-button>
+                <primary-button label="Salvar" className="btn btn-success"
+                  data-onclick="addDoador()"></primary-button>
               </div>
             </div>
           </div>
         </div>
 
-        <table id="doadorTable">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Nome</th>
-              <th>Email</th>
-              <th>Telefone</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+        <div class="table-responsive">
+          <table id="doadorTable">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Telefone</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
       </div>
 
       <!-- Doações -->
       <div id="doacao-section" class="app-page section hidden">
         <h2>Doações</h2>
-        <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modalNovaDoacao">
-          Nova Doação +
-        </button>
+        <primary-button label="Nova Doação +" className="btn btn-success mb-3" data-bs-toggle="modal"
+          data-bs-target="#modalNovaDoacao"></primary-button>
 
         <!-- Modal: Nova Doação (Bootstrap 5) -->
         <div class="modal fade" id="modalNovaDoacao" tabindex="-1" aria-labelledby="modalNovaDoacaoLabel"
@@ -276,34 +275,37 @@
                 </form>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-ghost me-auto" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-success" onclick="addDoacao()">Salvar</button>
+                <primary-button label="Cancelar" className="btn btn-ghost me-auto"
+                  data-bs-dismiss="modal"></primary-button>
+                <primary-button label="Salvar" className="btn btn-success"
+                  data-onclick="addDoacao()"></primary-button>
               </div>
             </div>
           </div>
         </div>
 
-        <table id="doacaoTable">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Doador</th>
-              <th>Valor</th>
-              <th>Data</th>
-              <th>Status</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+        <div class="table-responsive">
+          <table id="doacaoTable">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Doador</th>
+                <th>Valor</th>
+                <th>Data</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
       </div>
 
       <!-- Interações -->
       <div id="interacao-section" class="app-page section hidden">
         <h2>Interações</h2>
-        <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modalNovaInteracao">
-          Nova Interação +
-        </button>
+        <primary-button label="Nova Interação +" className="btn btn-success mb-3" data-bs-toggle="modal"
+          data-bs-target="#modalNovaInteracao"></primary-button>
 
         <!-- Modal: Nova Interação (Bootstrap 5) -->
         <div class="modal fade" id="modalNovaInteracao" tabindex="-1" aria-labelledby="modalNovaInteracaoLabel"
@@ -331,26 +333,30 @@
                 </form>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-ghost me-auto" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-success" onclick="addInteracaoNova()">Salvar</button>
+                <primary-button label="Cancelar" className="btn btn-ghost me-auto"
+                  data-bs-dismiss="modal"></primary-button>
+                <primary-button label="Salvar" className="btn btn-success"
+                  data-onclick="addInteracaoNova()"></primary-button>
               </div>
             </div>
           </div>
         </div>
 
-        <table id="interacaoTable">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Doador ID</th>
-              <th>Tipo</th>
-              <th>Obs</th>
-              <th>Data</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+        <div class="table-responsive">
+          <table id="interacaoTable">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Doador ID</th>
+                <th>Tipo</th>
+                <th>Obs</th>
+                <th>Data</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
       </div>
     </main>
   </div>

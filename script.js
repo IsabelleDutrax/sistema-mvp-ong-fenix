@@ -16,12 +16,12 @@ let interacoesData = [];
 // ALternar visualização das páginas:
 function showLogin() {
   document.getElementById("login-page").classList.remove("hidden");
-  document.getElementById("system-page").classList.add("hidden");
+  document.getElementById("app-shell").classList.add("hidden");
 }
 
 function showSystem() {
   document.getElementById("login-page").classList.add("hidden");
-  document.getElementById("system-page").classList.remove("hidden");
+  document.getElementById("app-shell").classList.remove("hidden");
 }
 
 // --------------
@@ -168,9 +168,9 @@ async function loadDoadores() {
       <td>${d.nome}</td>
       <td>${d.email || ""}</td>
       <td>${d.telefone || ""}</td>
-      <td>
-        <button onclick="updateDoador(${d.id_doador})"><i class="fi fi-rr-pencil"></i></button>
-        <button onclick="deleteDoador(${d.id_doador})"><i class="fi fi-rr-trash"></i></button>
+      <td class="actions-td">
+        <primary-button icon="fi fi-rr-pencil" className="btn btn-outline-secondary" data-onclick="updateDoador(${d.id_doador})"></primary-button>
+        <primary-button icon="fi fi-rr-trash" className="btn-danger" data-onclick="deleteDoador(${d.id_doador})"></primary-button>
       </td>
     </tr>`;
   });
@@ -244,9 +244,9 @@ async function loadDoacoes() {
       <td>${d.valor}</td>
       <td>${d.data_doacao || ""}</td>
       <td>${d.status || ""}</td>
-      <td>
-        <button onclick="updateDoacao(${d.id_doacao})"><i class="fi fi-rr-pencil"></i></button>
-        <button onclick="deleteDoacao(${d.id_doacao})"><i class="fi fi-rr-trash"></i></button>
+      <td class="actions-td">
+        <primary-button icon="fi fi-rr-pencil" className="btn btn-outline-secondary" data-onclick="updateDoacao(${d.id_doacao})"></primary-button>
+        <primary-button icon="fi fi-rr-trash" className="btn-danger" data-onclick="deleteDoacao(${d.id_doacao})"></primary-button>
       </td>
     </tr>`;
   });
@@ -334,9 +334,9 @@ async function loadInteracoes() {
       <td>${i.tipo_interacao}</td>
       <td>${i.observacoes || ""}</td>
       <td>${i.data_interacao}</td>
-      <td>
-        <button onclick="updateInteracaoNova(${i.id_interacao})"><i class="fi fi-rr-pencil"></i></button>
-        ${isAdmin ? `<button onclick="deleteInteracaoNova(${i.id_interacao})"><i class="fi fi-rr-trash"></i></button>` : ""}
+      <td class="actions-td">
+        <primary-button icon="fi fi-rr-pencil" className="btn btn-outline-secondary" data-onclick="updateInteracaoNova(${i.id_interacao})"></primary-button>
+        ${isAdmin ? `<primary-button icon="fi fi-rr-trash" className="btn-danger" data-onclick="deleteInteracaoNova(${i.id_interacao})"></primary-button>` : ""}
       </td>
     </tr>`;
   });
@@ -462,16 +462,21 @@ function primaryButton({
   className = "",
   icon,
   iconId,
+  id,
+  disabled,
 }) {
   return `
-    <button type="button" ${title ? `title="${title}"` : ""} class="${className}" ${onClick ? `onclick="${onClick}"` : ""}>
+    <button type="button" ${id ? `id="${id}"` : ""} ${title ? `title="${title}"` : ""} class="${className}" ${onClick ? `onclick="${onClick}"` : ""} ${disabled ? "disabled" : ""}>
         ${icon ? `<i ${iconId ? `id="${iconId}"` : ""} class="${icon}"></i>` : ""}
-        ${label}
+        ${label ? `<span class="ms-1">${label}</span>` : ""}
     </button>
   `;
 }
 
 // Registrando a Tag Nativa
+// Atributos aceitos: label, title, className, icon, iconId, data-onclick, data-id, disabled
+// Atributos data-bs-toggle / data-bs-target / data-bs-dismiss (Bootstrap) podem ser colocados
+// direto na tag <primary-button>: o Bootstrap encontra o clique via closest() e funciona normalmente.
 customElements.define(
   "primary-button",
   class extends HTMLElement {
@@ -479,10 +484,12 @@ customElements.define(
       this.innerHTML = primaryButton({
         label: this.getAttribute("label"),
         title: this.getAttribute("title"),
-        className: this.getAttribute("className") || "btn-block",
-        onClick: this.getAttribute("onClick"),
+        className: this.getAttribute("className") || "",
+        onClick: this.getAttribute("data-onclick"),
         icon: this.getAttribute("icon"),
         iconId: this.getAttribute("iconId"),
+        id: this.getAttribute("data-id"),
+        disabled: this.hasAttribute("disabled"),
       });
     }
   },
