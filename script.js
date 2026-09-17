@@ -42,7 +42,18 @@ async function signIn() {
     email,
     password,
   });
-  if (error) return alert("Erro: " + error.message);
+  if (error) {
+    return Swal.fire({
+      icon: "error",
+      title: "Erro: " + error.message,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+  }
 
   showSystem();
 
@@ -78,6 +89,7 @@ async function signIn() {
 async function signOut() {
   await supabaseClient.auth.signOut();
   showLogin();
+  fecharMenuMobile();
 
   currentUser = null;
   //   toggleSections(false);
@@ -127,6 +139,12 @@ function showPage(page) {
   if (activeLink) activeLink.classList.add("active");
 
   if (page === "dashboard") renderDashboard();
+
+  fecharMenuMobile();
+}
+
+function fecharMenuMobile() {
+  bootstrap.Offcanvas.getInstance(document.getElementById("sidebarSystem"))?.hide();
 }
 
 // Calcula e exibe os números do dashboard a partir dos dados já carregados
@@ -314,8 +332,18 @@ async function addDoador() {
 
 function updateDoador(id) {
   const doador = doadoresData.find((d) => d.id_doador === id);
-  if (!doador)
-    return alert("Doador não encontrado no cache. Recarregue a página.");
+  if (!doador) {
+    return Swal.fire({
+      icon: "error",
+      title: "Doador não encontrado no cache. Recarregue a página.",
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+  }
 
   document.getElementById("editDoadorId").value = doador.id_doador;
   document.getElementById("editDoadorNome").value = doador.nome || "";
@@ -409,14 +437,51 @@ async function salvarEdicaoDoador() {
   loadDoadores();
 }
 
-async function deleteDoador(id) {
-  if (!confirm("Tem certeza que deseja deletar este doador?")) return;
-  const { error } = await supabaseClient
-    .from("doador_novo")
-    .delete()
-    .eq("id_doador", id);
-  if (error) return alert("Erro: " + error.message);
-  loadDoadores();
+function deleteDoador(id) {
+  Swal.fire({
+    title: "Tem certeza?",
+    text: "Essa ação não pode ser desfeita!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Sim, excluir!",
+    cancelButtonText: "Cancelar",
+    buttonsStyling: false,
+    customClass: {
+      confirmButton: "btn btn-danger me-2",
+      cancelButton: "btn btn-ghost",
+    },
+  }).then(async (result) => {
+    if (!result.isConfirmed) return;
+
+    const { error } = await supabaseClient
+      .from("doador_novo")
+      .delete()
+      .eq("id_doador", id);
+    if (error) {
+      return Swal.fire({
+        icon: "error",
+        title: "Erro ao excluir: " + error.message,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 1500,
+        timerProgressBar: true,
+        toast: true,
+        animation: true,
+      });
+    }
+
+    Swal.fire({
+      icon: "success",
+      title: "Doador excluído!",
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+    loadDoadores();
+  });
 }
 
 // =========================
@@ -535,8 +600,18 @@ async function addDoacao() {
 
 function updateDoacao(id) {
   const doacao = doacoesData.find((d) => d.id_doacao === id);
-  if (!doacao)
-    return alert("Doação não encontrada no cache. Recarregue a página.");
+  if (!doacao) {
+    return Swal.fire({
+      icon: "error",
+      title: "Doação não encontrada no cache. Recarregue a página.",
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+  }
 
   document.getElementById("editDoacaoId").value = doacao.id_doacao;
   document.getElementById("editDoacaoValor").value = doacao.valor || "";
@@ -620,14 +695,51 @@ async function salvarEdicaoDoacao() {
   loadDoacoes();
 }
 
-async function deleteDoacao(id) {
-  if (!confirm("Deseja deletar esta doação?")) return;
-  const { error } = await supabaseClient
-    .from("doacao_nova")
-    .delete()
-    .eq("id_doacao", id);
-  if (error) return alert("Erro: " + error.message);
-  loadDoacoes();
+function deleteDoacao(id) {
+  Swal.fire({
+    title: "Tem certeza?",
+    text: "Essa ação não pode ser desfeita!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Sim, excluir!",
+    cancelButtonText: "Cancelar",
+    buttonsStyling: false,
+    customClass: {
+      confirmButton: "btn btn-danger me-2",
+      cancelButton: "btn btn-ghost",
+    },
+  }).then(async (result) => {
+    if (!result.isConfirmed) return;
+
+    const { error } = await supabaseClient
+      .from("doacao_nova")
+      .delete()
+      .eq("id_doacao", id);
+    if (error) {
+      return Swal.fire({
+        icon: "error",
+        title: "Erro ao excluir: " + error.message,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 1500,
+        timerProgressBar: true,
+        toast: true,
+        animation: true,
+      });
+    }
+
+    Swal.fire({
+      icon: "success",
+      title: "Doação excluída!",
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+    loadDoacoes();
+  });
 }
 
 // =========================
@@ -762,8 +874,18 @@ async function addInteracaoNova() {
 
 function updateInteracaoNova(id) {
   const interacao = interacoesData.find((i) => i.id_interacao === id);
-  if (!interacao)
-    return alert("Interação não encontrada no cache. Recarregue a página.");
+  if (!interacao) {
+    return Swal.fire({
+      icon: "error",
+      title: "Interação não encontrada no cache. Recarregue a página.",
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+  }
 
   document.getElementById("editInteracaoId").value = interacao.id_interacao;
   document.getElementById("editIdDoadorInteracao").value =
@@ -883,16 +1005,64 @@ async function salvarEdicaoInteracao() {
   loadInteracoes();
 }
 
-async function deleteInteracaoNova(id) {
-  if (!isAdmin) return alert("Somente admins podem deletar interações");
-  if (!confirm("Deseja deletar esta interação?")) return;
+function deleteInteracaoNova(id) {
+  if (!isAdmin) {
+    return Swal.fire({
+      icon: "error",
+      title: "Somente admins podem deletar interações",
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+  }
 
-  const { error } = await supabaseClient
-    .from("interacao_nova")
-    .delete()
-    .eq("id_interacao", id);
-  if (error) return alert("Erro: " + error.message);
-  loadInteracoes();
+  Swal.fire({
+    title: "Tem certeza?",
+    text: "Essa ação não pode ser desfeita!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Sim, excluir!",
+    cancelButtonText: "Cancelar",
+    buttonsStyling: false,
+    customClass: {
+      confirmButton: "btn btn-danger me-2",
+      cancelButton: "btn btn-ghost",
+    },
+  }).then(async (result) => {
+    if (!result.isConfirmed) return;
+
+    const { error } = await supabaseClient
+      .from("interacao_nova")
+      .delete()
+      .eq("id_interacao", id);
+    if (error) {
+      return Swal.fire({
+        icon: "error",
+        title: "Erro ao excluir: " + error.message,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 1500,
+        timerProgressBar: true,
+        toast: true,
+        animation: true,
+      });
+    }
+
+    Swal.fire({
+      icon: "success",
+      title: "Interação excluída!",
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+    loadInteracoes();
+  });
 }
 
 // =========================

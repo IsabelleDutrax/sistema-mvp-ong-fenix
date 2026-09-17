@@ -131,6 +131,16 @@
     border: 1px solid $border-color;
     border-radius: 8px;
 
+    &.stat-card-clickable {
+        cursor: pointer;
+        transition: box-shadow 0.2s ease, border-color 0.2s ease;
+
+        &:hover {
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-color: $ong-orange;
+        }
+    }
+
     .stat-label {
         font-size: 0.75rem;
         text-transform: uppercase;
@@ -162,58 +172,39 @@
     }
 }
 
-// Sidebar vira uma barra horizontal em telas pequenas
+// Abaixo de md (768px), o Bootstrap transforma o .sidebar num menu-gaveta
+// (offcanvas-md); acima disso ele volta a ser a sidebar fixa normal.
+// Garante que o fundo/borda da sidebar não sumam nesse modo "estático" do Bootstrap.
+.sidebar {
+    background-color: white !important;
+}
+
+// Botão de hambúrguer que abre o menu-gaveta no mobile
+.sidebar-toggler {
+    position: fixed;
+    top: $padding;
+    left: $padding;
+    z-index: 1030;
+    width: 42px;
+    height: 42px;
+    border: 1px solid $border-color;
+    border-radius: 6px;
+    background-color: white;
+    color: $ong-dark;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar-close {
+    position: absolute;
+    top: $padding;
+    right: $padding;
+}
+
 @media (max-width: 768px) {
-    .app-shell {
-        flex-direction: column;
-    }
-
-    .sidebar {
-        width: 100%;
-        height: auto;
-        flex-shrink: 0;
-        flex-direction: row;
-        align-items: center;
-        border-right: none;
-        border-bottom: 1px solid $border-color;
-        padding: $padding;
-        overflow-x: auto;
-        overflow-y: hidden;
-        flex-direction: column;
-        display: flex;
-
-        .sidebar-brand {
-            display: none;
-        }
-
-        .nav {
-            display: flex;
-            flex-direction: row;
-            padding: 0;
-            width: 100%;
-
-            .nav-link {
-                white-space: nowrap;
-            }
-        }
-
-        .sidebar-footer {
-            border-top: none;
-            padding: 0;
-            margin-left: auto;
-            flex-shrink: 0;
-
-            .logged-in-text {
-                display: none;
-            }
-
-            .nav-link {
-                white-space: nowrap;
-            }
-        }
-    }
-
     .main-content {
-        padding: $padding;
+        padding: $padding * 5 $padding $padding;
     }
 }

@@ -45,6 +45,10 @@ table td {
   .table-responsive table {
     min-width: 600px;
   }
+  .table-responsive table th,
+  .table-responsive table td {
+    padding: 10px;
+  }
 }
 .section {
   border: 1px solid #ddd;
@@ -149,8 +153,8 @@ input {
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 input:focus {
-  border-color: #4CAF50;
-  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.15);
+  border-color: #FF5722;
+  box-shadow: 0 0 0 3px rgba(255, 87, 34, 0.15);
 }
 
 .modal .modal-title {
@@ -209,9 +213,15 @@ input:focus {
 }
 
 .login-container h1 {
-  margin: 0 0 20px 0;
+  margin: 0;
   text-align: center;
   font-family: "Libre Baskerville", serif;
+}
+
+.login-subtitle {
+  margin: 0 0 20px 0;
+  text-align: center;
+  color: #888;
 }
 
 .auth-section {
@@ -271,7 +281,7 @@ button.btn-block:hover {
   margin-top: 10px;
 }
 .auth-links a {
-  color: #4CAF50;
+  color: #FF5722;
   text-decoration: underline;
   cursor: pointer;
   font-size: 0.95rem;
@@ -286,7 +296,7 @@ button.btn-block:hover {
   font-size: 1rem;
 }
 .icon-btn:hover {
-  color: #4CAF50;
+  color: #FF5722;
 }
 
 .logo-circle-sm {
@@ -426,6 +436,14 @@ button.btn-block:hover {
   border: 1px solid #ddd;
   border-radius: 8px;
 }
+.stat-card.stat-card-clickable {
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.stat-card.stat-card-clickable:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-color: #FF5722;
+}
 .stat-card .stat-label {
   font-size: 0.75rem;
   text-transform: uppercase;
@@ -453,49 +471,35 @@ button.btn-block:hover {
   font-size: 1.3rem;
 }
 
+.sidebar {
+  background-color: white !important;
+}
+
+.sidebar-toggler {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 1030;
+  width: 42px;
+  height: 42px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background-color: white;
+  color: #010101;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
+
 @media (max-width: 768px) {
-  .app-shell {
-    flex-direction: column;
-  }
-  .sidebar {
-    width: 100%;
-    height: auto;
-    flex-shrink: 0;
-    flex-direction: row;
-    align-items: center;
-    border-right: none;
-    border-bottom: 1px solid #ddd;
-    padding: 15px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    flex-direction: column;
-    display: flex;
-  }
-  .sidebar .sidebar-brand {
-    display: none;
-  }
-  .sidebar .nav {
-    display: flex;
-    flex-direction: row;
-    padding: 0;
-    width: 100%;
-  }
-  .sidebar .nav .nav-link {
-    white-space: nowrap;
-  }
-  .sidebar .sidebar-footer {
-    border-top: none;
-    padding: 0;
-    margin-left: auto;
-    flex-shrink: 0;
-  }
-  .sidebar .sidebar-footer .logged-in-text {
-    display: none;
-  }
-  .sidebar .sidebar-footer .nav-link {
-    white-space: nowrap;
-  }
   .main-content {
-    padding: 15px;
+    padding: 75px 15px 15px;
   }
 }

@@ -10,10 +10,14 @@ Pra finalizar:
     - adicionar logo da ong
     - adicionar cores da Ong, identidade visual - OK
     - add .ico pro navegador
-    - remover ids desnecessários das tabelas exp: id da interação na tabela interaçao
-    - validações antes de excluir infos das tabelas (excluir doador que fez doação)
+    - remover ids desnecessários das tabelas exp: id da interação na tabela interaçao - OK (revisar)
+    - validações antes de excluir infos das tabelas (excluir doador que fez doação) melhorar alertas
 - Mudar banco de dados
 
+
+Bug:
+- formato do menu lateral na versão mobile - OK
+- email nao mostrando perto do botão sair - OK
 
 
 Pro futuro:
@@ -24,3 +28,5 @@ Pro futuro:
 - melhorar responsividade da tabela
 - adicionar data de criação e edição dos ddos na tabela
 - definir informações vistas ou nao por usuário não admin
+- rastrear mudanças: salvar o perfil do usuário que editou, criou, excluiu dados das tabelas
+- na dashboard: filtros total por mes, semana, por doador, grafico com tipo de parameto, tipo de interação..

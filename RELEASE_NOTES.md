@@ -4,6 +4,28 @@ Histórico de mudanças do projeto, organizado por commit/entrega. Formato inspi
 
 
 
+## 2026-09-17 — Fim dos alertas nativos + cards do Dashboard clicáveis
+### Adicionado
+- Cards "Doadores", "Doações" e "Interações" do Dashboard agora são clicáveis e levam direto pra aba correspondente, com destaque no hover (o card "Total Arrecadado" continua sem ação).
+### Alterado
+- Todas as confirmações de exclusão (Doador/Doação/Interação) trocadas do `confirm()` nativo do navegador para um `Swal.fire` de confirmação, com botão "Excluir" vermelho e "Cancelar" no estilo ghost (reaproveitando as classes `btn btn-danger`/`btn-ghost` já existentes).
+- Últimos `alert()` nativos que restavam (erro de login, "item não encontrado no cache", "somente admins podem excluir") trocados pelo mesmo toast de erro usado no resto do sistema.
+
+## 2026-09-17 — Menu mobile com Offcanvas do Bootstrap + refinamentos
+### Adicionado
+- Menu lateral no mobile virou um menu-gaveta (Bootstrap Offcanvas, classe `offcanvas-md`): fica escondido por padrão e abre por cima do conteúdo ao tocar num botão de hambúrguer, em vez de virar uma barra horizontal com scroll.
+- Botão de hambúrguer (visível só no mobile) e botão "X" de fechar dentro do menu.
+- Menu fecha sozinho ao trocar de página ou ao clicar em "Sair" (mobile).
+- Tag `<meta name="viewport">` no `<head>` — faltava por completo, e sem ela o navegador tratava a página como desktop mesmo no celular, quebrando toda a responsividade já feita.
+- Subtítulo "Sistema de gestão de doações" abaixo do título da tela de login.
+### Alterado
+- Espaçamento no topo do conteúdo (mobile) aumentado, pra não ficar colado no botão de hambúrguer.
+- Padding das células das tabelas reduzido no mobile (de 15px para 10px), deixando as linhas mais compactas.
+### Corrigido
+- Menu lateral no mobile ficava idêntico ao desktop: havia uma declaração `flex-direction` duplicada e conflitante no CSS, e a versão errada estava vencendo.
+- Ícone do botão de hambúrguer invisível (branco sobre fundo branco).
+- Botão "X" de fechar o menu não funcionava (dependia de um atributo automático do Bootstrap que exigia uma classe que tivemos que remover por outro motivo); passou a fechar via JavaScript direto.
+
 ## 2026-09-17 — Identidade visual da Ong (Fênix Conecta)
 ### Adicionado
 - Sistema renomeado para "Fênix Conecta" (título de login e nome na sidebar), removida menção ao Supabase e o subtítulo "Login / Cadastro" da tela de login.

@@ -38,9 +38,15 @@
 }
 
 .login-container h1 {
-    margin: 0 0 $margin * 2 0;
+    margin: 0;
     text-align: center;
     font-family: "Libre Baskerville", serif;
+}
+
+.login-subtitle {
+    margin: 0 0 $margin * 2 0;
+    text-align: center;
+    color: #888;
 }
 
 .auth-section {
