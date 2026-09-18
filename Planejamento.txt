@@ -11,13 +11,30 @@ Pra finalizar:
     - adicionar cores da Ong, identidade visual - OK
     - add .ico pro navegador
     - remover ids desnecessários das tabelas exp: id da interação na tabela interaçao - OK (revisar)
-    - validações antes de excluir infos das tabelas (excluir doador que fez doação) melhorar alertas
+    - validações antes de excluir infos das tabelas (excluir doador que fez doação) melhorar alertas  -
 - Mudar banco de dados
 
 
 Bug:
 - formato do menu lateral na versão mobile - OK
 - email nao mostrando perto do botão sair - OK
+
+Pra agora:
+-- insigth's com professor:
+    - botão exportar pdf/csv - OK
+    - botão enviar email - OK
+    - campo busca nos campos select - OK
+    - contador de doações por doador na tabela + modal com a lista de doações dele - OK
+    - destaque (ícone de relógio vermelho) quando a doação tem data futura - OK
+        -> pra isso funcionar, removi a validação que travava data futura no cadastro/edição de doação
+    - mensagem pronta pra copiar (lembrete) pro doador - OK
+    - botão de backup completo (baixa doadores + doações + interações num arquivo só) - OK
+
+Pendente (precisa mudar o banco de dados - fazer depois):
+    - campo "observações/detalhes" na doação
+    - campo "tipo de pessoa" (física/jurídica) no doador + usar como filtro na coluna
+    - campo "tipo de frequência"/"tipo de doador" no cadastro de doador
+        -> antes de criar no banco: fechar com o professor se é 1 campo só ou 2 campos diferentes (frequência = esporádico/recorrente x tipo = padrinho/recorrente)
 
 
 Pro futuro:

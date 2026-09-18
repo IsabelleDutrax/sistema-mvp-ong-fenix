@@ -14,6 +14,8 @@
   <link rel="stylesheet" href="./style.css">
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <link href="https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons/css/all/all.css" rel="stylesheet">
+  <!-- Choices.js (select com busca) -->
+  <link href="https://cdn.jsdelivr.net/npm/choices.js@11.2.3/public/assets/styles/choices.min.css" rel="stylesheet">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -135,6 +137,9 @@
             <h1>Dashboard</h1>
             <p>Visão geral das doações e doadores</p>
           </div>
+          <button type="button" class="btn btn-outline-secondary" title="Baixa um arquivo com todos os dados do sistema (doadores, doações e interações), útil como cópia de segurança" onclick="exportarBackupCompleto()">
+            <i class="fi fi-rr-cloud-download-alt me-1"></i>Backup completo
+          </button>
         </div>
         <div class="row g-3">
           <div class="col-md-6 col-lg-3">
@@ -191,8 +196,19 @@
       <!-- Doadores -->
       <div id="doador-section" class="app-page section hidden">
         <h2>Doadores</h2>
-        <primary-button label="Novo Doador +" className="btn btn-orange mb-3" data-bs-toggle="modal"
-          data-bs-target="#modalNovoDoador"></primary-button>
+        <div class="d-flex gap-2 mb-3">
+          <primary-button label="Novo Doador +" className="btn btn-orange" data-bs-toggle="modal"
+            data-bs-target="#modalNovoDoador"></primary-button>
+          <div class="dropdown">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+              <i class="fi fi-rr-download me-1"></i>Exportar
+            </button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#" onclick="exportarCSV('doadorTable', 'doadores')">CSV (Excel)</a></li>
+              <li><a class="dropdown-item" href="#" onclick="exportarPDF('doadorTable', 'doadores', 'Lista de Doadores')">PDF</a></li>
+            </ul>
+          </div>
+        </div>
 
         <!-- Modal: Novo Doador -->
         <div class="modal fade" id="modalNovoDoador" tabindex="-1" aria-labelledby="modalNovoDoadorLabel"
@@ -280,6 +296,34 @@
           </div>
         </div>
 
+        <!-- Modal: Doações do Doador -->
+        <div class="modal fade" id="modalDoacoesDoador" tabindex="-1" aria-labelledby="modalDoacoesDoadorLabel"
+          aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modalDoacoesDoadorLabel">Doações do doador</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+              </div>
+              <div class="modal-body">
+                <table class="table" id="doacoesDoadorTable">
+                  <thead>
+                    <tr>
+                      <th>Valor</th>
+                      <th>Data</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+              <div class="modal-footer">
+                <primary-button label="Fechar" className="btn btn-ghost" data-bs-dismiss="modal"></primary-button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="table-responsive">
           <table id="doadorTable">
             <thead>
@@ -287,6 +331,7 @@
                 <th>Nome</th>
                 <th>Email</th>
                 <th>Telefone</th>
+                <th>Doações</th>
                 <th>Ações</th>
               </tr>
             </thead>
@@ -298,8 +343,19 @@
       <!-- Doações -->
       <div id="doacao-section" class="app-page section hidden">
         <h2>Doações</h2>
-        <primary-button label="Nova Doação +" className="btn btn-orange mb-3" data-bs-toggle="modal"
-          data-bs-target="#modalNovaDoacao"></primary-button>
+        <div class="d-flex gap-2 mb-3">
+          <primary-button label="Nova Doação +" className="btn btn-orange" data-bs-toggle="modal"
+            data-bs-target="#modalNovaDoacao"></primary-button>
+          <div class="dropdown">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+              <i class="fi fi-rr-download me-1"></i>Exportar
+            </button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#" onclick="exportarCSV('doacaoTable', 'doacoes')">CSV (Excel)</a></li>
+              <li><a class="dropdown-item" href="#" onclick="exportarPDF('doacaoTable', 'doacoes', 'Lista de Doações')">PDF</a></li>
+            </ul>
+          </div>
+        </div>
 
         <!-- Modal: Nova Doação  -->
         <div class="modal fade" id="modalNovaDoacao" tabindex="-1" aria-labelledby="modalNovaDoacaoLabel"
@@ -426,8 +482,19 @@
       <!-- Interações -->
       <div id="interacao-section" class="app-page section hidden">
         <h2>Interações</h2>
-        <primary-button label="Nova Interação +" className="btn btn-orange mb-3" data-bs-toggle="modal"
-          data-bs-target="#modalNovaInteracao"></primary-button>
+        <div class="d-flex gap-2 mb-3">
+          <primary-button label="Nova Interação +" className="btn btn-orange" data-bs-toggle="modal"
+            data-bs-target="#modalNovaInteracao"></primary-button>
+          <div class="dropdown">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+              <i class="fi fi-rr-download me-1"></i>Exportar
+            </button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#" onclick="exportarCSV('interacaoTable', 'interacoes')">CSV (Excel)</a></li>
+              <li><a class="dropdown-item" href="#" onclick="exportarPDF('interacaoTable', 'interacoes', 'Lista de Interações')">PDF</a></li>
+            </ul>
+          </div>
+        </div>
 
         <!-- Modal: Nova Interação -->
         <div class="modal fade" id="modalNovaInteracao" tabindex="-1" aria-labelledby="modalNovaInteracaoLabel"
@@ -554,6 +621,11 @@
   <!-- Bootstrap 5 JS (Modal, etc..) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- Choices.js (select com busca nos campos de doador) -->
+  <script src="https://cdn.jsdelivr.net/npm/choices.js@11.2.3/public/assets/scripts/choices.min.js"></script>
+  <!-- jsPDF (exportar tabelas em PDF) -->
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@4.2.1/dist/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@5.0.8/dist/jspdf.plugin.autotable.min.js"></script>
   <script src="./script.js" defer></script>
 
 </body>

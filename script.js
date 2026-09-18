@@ -82,6 +82,7 @@ async function signIn() {
 
     animation: true,
   });
+  if (!choicesDoador) initSelectsBuscaDoador();
   loadData();
   //   toggleSections(true);
 }
@@ -179,22 +180,152 @@ async function loadDoadores() {
 
   doadoresData = data;
   preencherDropdownDoadores();
+  renderDoadorTable();
+}
 
+function renderDoadorTable() {
   const tbody = document.querySelector("#doadorTable tbody");
   tbody.innerHTML = "";
-  data.forEach((d) => {
+  doadoresData.forEach((d) => {
+    const totalDoacoes = doacoesData.filter(
+      (doacao) => doacao.id_doador === d.id_doador,
+    ).length;
+
     tbody.innerHTML += `<tr>
       <td>${d.nome}</td>
       <td>${d.email || ""}</td>
       <td>${d.telefone || ""}</td>
+      <td class="text-center">
+        <button type="button" class="btn btn-link p-0" title="Ver doações deste doador" onclick="abrirDoacoesDoador(${d.id_doador})">${totalDoacoes}</button>
+      </td>
       <td class="actions-td">
         <div class="actions-content">
+          ${d.email ? `<a href="mailto:${d.email}" class="btn btn-outline-primary" title="Enviar e-mail para ${d.nome}"><i class="fi fi-rr-envelope"></i></a>` : ""}
+          <button type="button" class="btn btn-outline-secondary" title="Copiar mensagem de lembrete" onclick="copiarMensagemLembrete(${d.id_doador})"><i class="fi fi-rr-clipboard"></i></button>
           <primary-button icon="fi fi-rr-pencil" className="btn btn-outline-secondary" data-onclick="updateDoador(${d.id_doador})"></primary-button>
           <primary-button icon="fi fi-rr-trash" className="btn btn-danger" data-onclick="deleteDoador(${d.id_doador})"></primary-button>
         </div>
       </td>
     </tr>`;
   });
+}
+
+// Abre o modal com a lista de doações de um doador específico
+function abrirDoacoesDoador(idDoador) {
+  const doador = doadoresData.find((d) => d.id_doador === idDoador);
+  const doacoesDoDoador = doacoesData.filter((d) => d.id_doador === idDoador);
+
+  document.getElementById("modalDoacoesDoadorLabel").textContent =
+    `Doações de ${doador ? doador.nome : "-"}`;
+
+  const tbody = document.querySelector("#doacoesDoadorTable tbody");
+  tbody.innerHTML = doacoesDoDoador.length
+    ? doacoesDoDoador
+        .map(
+          (d) => `<tr>
+            <td>R$ ${d.valor}</td>
+            <td>${destaqueDataFutura(d.data_doacao)}${formatarData(d.data_doacao)}</td>
+            <td>${badgeStatus(d.status)}</td>
+          </tr>`,
+        )
+        .join("")
+    : `<tr><td colspan="3" class="text-center text-muted">Nenhuma doação registrada</td></tr>`;
+
+  bootstrap.Modal.getOrCreateInstance(
+    document.getElementById("modalDoacoesDoador"),
+  ).show();
+}
+
+// Copia uma mensagem de lembrete pronta com os dados do doador
+function copiarMensagemLembrete(idDoador) {
+  const doador = doadoresData.find((d) => d.id_doador === idDoador);
+  if (!doador) return;
+
+  const mensagem = `Olá, ${doador.nome}! Aqui é da Ong Fênix. Passando para agradecer o seu apoio e lembrar que estamos à disposição para qualquer dúvida sobre sua doação.`;
+
+  navigator.clipboard.writeText(mensagem).then(() => {
+    Swal.fire({
+      icon: "success",
+      title: "Mensagem copiada!",
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+  });
+}
+
+// Baixa um arquivo único com todos os dados do sistema (cópia de segurança manual)
+function exportarBackupCompleto() {
+  const backup = {
+    geradoEm: new Date().toISOString(),
+    doadores: doadoresData,
+    doacoes: doacoesData,
+    interacoes: interacoesData,
+  };
+
+  const blob = new Blob([JSON.stringify(backup, null, 2)], {
+    type: "application/json",
+  });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = `backup-fenix-conecta-${hojeISO()}.json`;
+  link.click();
+  URL.revokeObjectURL(link.href);
+}
+
+// =========================
+// EXPORTAR TABELAS (CSV e PDF)
+// =========================
+
+// Gera um CSV a partir de uma tabela HTML, ignorando a coluna de Ações
+function exportarCSV(tableId, nomeArquivo) {
+  const table = document.getElementById(tableId);
+  const linhas = [...table.querySelectorAll("tr")];
+
+  const csv = linhas
+    .map((tr) =>
+      [...tr.querySelectorAll("th, td")]
+        .filter(
+          (celula) =>
+            !celula.classList.contains("actions-td") &&
+            celula.textContent.trim() !== "Ações",
+        )
+        .map((celula) => `"${celula.textContent.trim().replace(/"/g, '""')}"`)
+        .join(";"),
+    )
+    .join("\n");
+
+  // ﻿ no início evita acentos quebrados ao abrir o CSV no Excel
+  const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8;" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = `${nomeArquivo}.csv`;
+  link.click();
+  URL.revokeObjectURL(link.href);
+}
+
+// Gera um PDF a partir de uma tabela HTML, ignorando a coluna de Ações
+function exportarPDF(tableId, nomeArquivo, titulo) {
+  const table = document.getElementById(tableId);
+  const doc = new jspdf.jsPDF();
+
+  doc.text(titulo, 14, 15);
+
+  const colunas = [...table.querySelectorAll("thead th")]
+    .filter((th) => th.textContent.trim() !== "Ações")
+    .map((th) => th.textContent.trim());
+
+  const linhas = [...table.querySelectorAll("tbody tr")].map((tr) =>
+    [...tr.querySelectorAll("td")]
+      .filter((td) => !td.classList.contains("actions-td"))
+      .map((td) => td.textContent.trim()),
+  );
+
+  doc.autoTable({ head: [colunas], body: linhas, startY: 20 });
+  doc.save(`${nomeArquivo}.pdf`);
 }
 
 function apenasDigitos(texto) {
@@ -206,19 +337,37 @@ function nomeDoador(idDoador) {
   return doador ? `${doador.nome} (${doador.email || "sem email"})` : "-";
 }
 
-function preencherDropdownDoadores() {
-  const opcoes =
-    `<option value="" disabled selected>Selecione um doador</option>` +
-    doadoresData
-      .map(
-        (d) =>
-          `<option value="${d.id_doador}">${d.nome} (${d.email || "sem email"})</option>`,
-      )
-      .join("");
+// Selects de doador com campo de busca (biblioteca Choices.js)
+let choicesDoador, choicesDoadorInteracao, choicesEditDoadorInteracao;
 
-  document.getElementById("idDoador").innerHTML = opcoes;
-  document.getElementById("idDoadorInteracao").innerHTML = opcoes;
-  document.getElementById("editIdDoadorInteracao").innerHTML = opcoes;
+function initSelectsBuscaDoador() {
+  const config = {
+    searchEnabled: true,
+    searchPlaceholderValue: "Buscar doador...",
+    noResultsText: "Nenhum doador encontrado",
+    placeholder: true,
+    placeholderValue: "Selecione um doador",
+    shouldSort: false,
+    itemSelectText: "",
+  };
+
+  choicesDoador = new Choices("#idDoador", config);
+  choicesDoadorInteracao = new Choices("#idDoadorInteracao", config);
+  choicesEditDoadorInteracao = new Choices("#editIdDoadorInteracao", config);
+}
+
+function preencherDropdownDoadores() {
+  const opcoes = doadoresData.map((d) => ({
+    value: String(d.id_doador),
+    label: `${d.nome} (${d.email || "sem email"})`,
+  }));
+
+  [choicesDoador, choicesDoadorInteracao, choicesEditDoadorInteracao].forEach(
+    (instancia) => {
+      instancia.clearStore();
+      instancia.setChoices(opcoes, "value", "label", true);
+    },
+  );
 }
 
 function badgeStatus(status) {
@@ -245,8 +394,14 @@ function hojeISO() {
   return `${ano}-${mes}-${dia}`;
 }
 
-document.getElementById("doacaoData").max = hojeISO();
-document.getElementById("editDoacaoData").max = hojeISO();
+// Ícone de alerta para doações com data futura (doador disse que vai doar, mas ainda não doou)
+function destaqueDataFutura(data) {
+  if (!data) return "";
+  const ehFutura = data.split("T")[0] > hojeISO();
+  return ehFutura
+    ? `<i class="fi fi-rr-clock text-danger me-1" title="Data futura - doação ainda não realizada"></i>`
+    : "";
+}
 
 document
   .getElementById("modalNovaDoacao")
@@ -499,7 +654,7 @@ async function loadDoacoes() {
     tbody.innerHTML += `<tr>
       <td>${nomeDoador(d.id_doador)}</td>
       <td>R$ <strong>${d.valor}</strong></td>
-      <td>${formatarData(d.data_doacao)}</td>
+      <td>${destaqueDataFutura(d.data_doacao)}${formatarData(d.data_doacao)}</td>
       <td>${badgeStatus(d.status)}</td>
       <td class="actions-td">
         <div class="actions-content">
@@ -509,6 +664,9 @@ async function loadDoacoes() {
       </td>
     </tr>`;
   });
+
+  // Atualiza o contador de doações na tabela de doadores, se ela já tiver sido carregada
+  if (doadoresData.length) renderDoadorTable();
 }
 
 async function addDoacao() {
@@ -534,19 +692,6 @@ async function addDoacao() {
     return Swal.fire({
       icon: "error",
       title: "Informe um valor válido maior que zero",
-      position: "top-end",
-      showConfirmButton: false,
-      timer: 1500,
-      timerProgressBar: true,
-      toast: true,
-      animation: true,
-    });
-  }
-
-  if (dataDoacao && dataDoacao > hojeISO()) {
-    return Swal.fire({
-      icon: "error",
-      title: "A data da doação não pode ser no futuro",
       position: "top-end",
       showConfirmButton: false,
       timer: 1500,
@@ -636,19 +781,6 @@ async function salvarEdicaoDoacao() {
     return Swal.fire({
       icon: "error",
       title: "Informe um valor válido maior que zero",
-      position: "top-end",
-      showConfirmButton: false,
-      timer: 1500,
-      timerProgressBar: true,
-      toast: true,
-      animation: true,
-    });
-  }
-
-  if (dataDoacao && dataDoacao > hojeISO()) {
-    return Swal.fire({
-      icon: "error",
-      title: "A data da doação não pode ser no futuro",
       position: "top-end",
       showConfirmButton: false,
       timer: 1500,
