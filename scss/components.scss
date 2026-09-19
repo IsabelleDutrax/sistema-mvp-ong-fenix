@@ -35,6 +35,15 @@ button {
     // }
 }
 
+// Botão "X" de fechar do Bootstrap - não deve herdar o hover verde do botão genérico acima
+.btn-close {
+    background-color: transparent;
+
+    &:hover {
+        background-color: transparent;
+    }
+}
+
 button.secondary {
     @include button($secondary-color);
     color: #333;

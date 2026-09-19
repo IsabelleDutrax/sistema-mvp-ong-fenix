@@ -69,11 +69,11 @@ async function signIn() {
 
   isAdmin = doadorData && doadorData.nivel_acesso === 99;
 
-  // alert("Login OK! Admin: " + isAdmin);
   Swal.fire({
     icon: "success",
     title: "Successo!",
-    text: `Login OK! Admin:${isAdmin}`,
+    text: `Login OK!`,
+    // text: `Login OK! Admin:${isAdmin}`,
     position: "top-right",
     showConfirmButton: false,
     timer: 1500,
@@ -145,15 +145,45 @@ function showPage(page) {
 }
 
 function fecharMenuMobile() {
-  bootstrap.Offcanvas.getInstance(document.getElementById("sidebarSystem"))?.hide();
+  bootstrap.Offcanvas.getInstance(
+    document.getElementById("sidebarSystem"),
+  )?.hide();
+}
+
+// Soma o valor das doações dentro do período escolhido (dias contados a partir de hoje)
+function calcularTotalArrecadado(periodo) {
+  if (periodo === "todos") {
+    return doacoesData.reduce((soma, d) => soma + (Number(d.valor) || 0), 0);
+  }
+
+  const diasPorPeriodo = {
+    semana: 7,
+    mes: 30,
+    bimestre: 60,
+    trimestre: 90,
+    semestre: 180,
+    ano: 365,
+  };
+
+  const inicio = new Date();
+  inicio.setDate(inicio.getDate() - diasPorPeriodo[periodo]);
+  const inicioISO = inicio.toISOString().split("T")[0];
+  const hojeStr = hojeISO();
+
+  return doacoesData
+    .filter((d) => {
+      const data = (d.data_doacao || "").split("T")[0];
+      return data >= inicioISO && data <= hojeStr;
+    })
+    .reduce((soma, d) => soma + (Number(d.valor) || 0), 0);
 }
 
 // Calcula e exibe os números do dashboard a partir dos dados já carregados
 function renderDashboard() {
-  const totalArrecadado = doacoesData.reduce(
-    (soma, d) => soma + (Number(d.valor) || 0),
-    0,
-  );
+  const periodoSelecionado =
+    document.getElementById("periodoTotalArrecadado")?.value || "todos";
+  const totalArrecadado = calcularTotalArrecadado(periodoSelecionado);
+
   document.getElementById("statTotalArrecadado").textContent =
     totalArrecadado.toLocaleString("pt-BR", {
       style: "currency",
@@ -162,6 +192,71 @@ function renderDashboard() {
   document.getElementById("statDoadores").textContent = doadoresData.length;
   document.getElementById("statDoacoes").textContent = doacoesData.length;
   document.getElementById("statInteracoes").textContent = interacoesData.length;
+}
+
+// =========================
+// ORDENAR TABELAS (clique no cabeçalho da coluna)
+// =========================
+
+// Guarda qual coluna e direção está ordenada em cada tabela
+const ordenacaoAtual = {};
+
+// Converte o texto da célula num valor comparável, de acordo com o tipo da coluna
+function valorParaOrdenar(texto, tipo) {
+  const limpo = texto.trim();
+
+  if (tipo === "numero") {
+    return parseFloat(limpo) || 0;
+  }
+
+  if (tipo === "moeda") {
+    return parseFloat(limpo.replace(/[^\d.,-]/g, "").replace(",", ".")) || 0;
+  }
+
+  if (tipo === "data") {
+    const [dia, mes, ano] = limpo.split("/");
+    return dia && mes && ano ? `${ano}-${mes}-${dia}` : limpo;
+  }
+
+  return limpo.toLowerCase();
+}
+
+// Ordena as linhas de uma tabela pela coluna clicada, alternando crescente/decrescente
+function ordenarTabela(tableId, colunaIndex, tipo) {
+  const table = document.getElementById(tableId);
+  const tbody = table.querySelector("tbody");
+  const linhas = [...tbody.querySelectorAll("tr")];
+
+  const estadoAnterior = ordenacaoAtual[tableId];
+  const crescente =
+    estadoAnterior && estadoAnterior.coluna === colunaIndex
+      ? !estadoAnterior.crescente
+      : true;
+  ordenacaoAtual[tableId] = { coluna: colunaIndex, crescente };
+
+  linhas.sort((a, b) => {
+    const valorA = valorParaOrdenar(a.children[colunaIndex].textContent, tipo);
+    const valorB = valorParaOrdenar(b.children[colunaIndex].textContent, tipo);
+    if (valorA < valorB) return crescente ? -1 : 1;
+    if (valorA > valorB) return crescente ? 1 : -1;
+    return 0;
+  });
+
+  linhas.forEach((linha) => tbody.appendChild(linha));
+  atualizarIconesOrdenacao(table, colunaIndex, crescente);
+}
+
+// Mostra uma seta pra cima/baixo na coluna ordenada e o ícone neutro nas outras
+function atualizarIconesOrdenacao(table, colunaIndex, crescente) {
+  const ths = [...table.querySelectorAll("thead th")];
+  ths.forEach((th, i) => {
+    const icone = th.querySelector(".icone-ordenacao");
+    if (!icone) return;
+    icone.className =
+      i === colunaIndex
+        ? `fi fi-rr-arrow-${crescente ? "up" : "down"} icone-ordenacao`
+        : "fi fi-rr-sort icone-ordenacao";
+  });
 }
 
 // Fecha o modal do Bootstrap e limpa os campos do formulário
@@ -338,7 +433,10 @@ function nomeDoador(idDoador) {
 }
 
 // Selects de doador com campo de busca (biblioteca Choices.js)
-let choicesDoador, choicesDoadorInteracao, choicesEditDoadorInteracao;
+let choicesDoador,
+  choicesEditDoador,
+  choicesDoadorInteracao,
+  choicesEditDoadorInteracao;
 
 function initSelectsBuscaDoador() {
   const config = {
@@ -352,6 +450,7 @@ function initSelectsBuscaDoador() {
   };
 
   choicesDoador = new Choices("#idDoador", config);
+  choicesEditDoador = new Choices("#editIdDoador", config);
   choicesDoadorInteracao = new Choices("#idDoadorInteracao", config);
   choicesEditDoadorInteracao = new Choices("#editIdDoadorInteracao", config);
 }
@@ -362,12 +461,15 @@ function preencherDropdownDoadores() {
     label: `${d.nome} (${d.email || "sem email"})`,
   }));
 
-  [choicesDoador, choicesDoadorInteracao, choicesEditDoadorInteracao].forEach(
-    (instancia) => {
-      instancia.clearStore();
-      instancia.setChoices(opcoes, "value", "label", true);
-    },
-  );
+  [
+    choicesDoador,
+    choicesEditDoador,
+    choicesDoadorInteracao,
+    choicesEditDoadorInteracao,
+  ].forEach((instancia) => {
+    instancia.clearStore();
+    instancia.setChoices(opcoes, "value", "label", true);
+  });
 }
 
 function badgeStatus(status) {
@@ -419,7 +521,8 @@ document
   });
 
 async function addDoador() {
-  const nome = document.getElementById("doadorNome").value.trim();
+  const nomeDigitado = document.getElementById("doadorNome").value.trim();
+  const nome = nomeDigitado.charAt(0).toUpperCase() + nomeDigitado.slice(1);
   const telefone = document.getElementById("doadorTelefone").value;
   const cpf = document.getElementById("doadorCpf").value;
   const endereco = document.getElementById("doadorEndereco").value;
@@ -442,6 +545,24 @@ async function addDoador() {
     return Swal.fire({
       icon: "error",
       title: "E-mail inválido",
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+  }
+
+  const telefoneDigitos = apenasDigitos(telefone);
+  if (
+    telefoneDigitos &&
+    telefoneDigitos.length !== 10 &&
+    telefoneDigitos.length !== 11
+  ) {
+    return Swal.fire({
+      icon: "error",
+      title: "Telefone inválido (informe DDD + número)",
       position: "top-end",
       showConfirmButton: false,
       timer: 1500,
@@ -546,6 +667,24 @@ async function salvarEdicaoDoador() {
     });
   }
 
+  const telefoneDigitos = apenasDigitos(telefone);
+  if (
+    telefoneDigitos &&
+    telefoneDigitos.length !== 10 &&
+    telefoneDigitos.length !== 11
+  ) {
+    return Swal.fire({
+      icon: "error",
+      title: "Telefone inválido (informe DDD + número)",
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+  }
+
   const cpfDigitos = apenasDigitos(cpf);
   if (cpfDigitos && cpfDigitos.length !== 11 && cpfDigitos.length !== 14) {
     return Swal.fire({
@@ -593,6 +732,23 @@ async function salvarEdicaoDoador() {
 }
 
 function deleteDoador(id) {
+  const temDoacoes = doacoesData.some((d) => d.id_doador === id);
+  const temInteracoes = interacoesData.some((i) => i.id_doador === id);
+
+  if (temDoacoes || temInteracoes) {
+    return Swal.fire({
+      icon: "error",
+      title: "Não é possível excluir",
+      text: "Esse doador tem doações ou interações registradas. Exclua ou reatribua esses registros a outro doador antes de excluí-lo.",
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 2500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+  }
+
   Swal.fire({
     title: "Tem certeza?",
     text: "Essa ação não pode ser desfeita!",
@@ -701,6 +857,19 @@ async function addDoacao() {
     });
   }
 
+  if (!forma) {
+    return Swal.fire({
+      icon: "error",
+      title: "Selecione a forma de pagamento",
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+  }
+
   const { data: doador, error: doadorError } = await supabaseClient
     .from("doador_novo")
     .select("id_doador")
@@ -725,6 +894,7 @@ async function addDoacao() {
     valor: parseFloat(valor),
     data_doacao: dataDoacao,
     forma_pagamento: forma,
+    status: "Pendente",
   });
   if (error) {
     return Swal.fire({
@@ -759,6 +929,7 @@ function updateDoacao(id) {
   }
 
   document.getElementById("editDoacaoId").value = doacao.id_doacao;
+  choicesEditDoador.setChoiceByValue(String(doacao.id_doador));
   document.getElementById("editDoacaoValor").value = doacao.valor || "";
   document.getElementById("editDoacaoData").value = doacao.data_doacao || "";
   document.getElementById("editDoacaoForma").value =
@@ -772,10 +943,24 @@ function updateDoacao(id) {
 
 async function salvarEdicaoDoacao() {
   const id = document.getElementById("editDoacaoId").value;
+  const idDoador = document.getElementById("editIdDoador").value;
   const valor = document.getElementById("editDoacaoValor").value;
   const dataDoacao = document.getElementById("editDoacaoData").value;
   const forma = document.getElementById("editDoacaoForma").value;
   const status = document.getElementById("editDoacaoStatus").value;
+
+  if (!idDoador) {
+    return Swal.fire({
+      icon: "error",
+      title: "Selecione o doador",
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+  }
 
   if (!valor || parseFloat(valor) <= 0) {
     return Swal.fire({
@@ -790,9 +975,36 @@ async function salvarEdicaoDoacao() {
     });
   }
 
+  if (!forma) {
+    return Swal.fire({
+      icon: "error",
+      title: "Selecione a forma de pagamento",
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+  }
+
+  if (!status) {
+    return Swal.fire({
+      icon: "error",
+      title: "Selecione o status",
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+      toast: true,
+      animation: true,
+    });
+  }
+
   const { error } = await supabaseClient
     .from("doacao_nova")
     .update({
+      id_doador: parseInt(idDoador),
       valor: parseFloat(valor),
       data_doacao: dataDoacao,
       forma_pagamento: forma,
@@ -878,7 +1090,6 @@ function deleteDoacao(id) {
 // INTERAÇÃO NOVA (ong e doador)
 // =========================
 async function loadInteracoes() {
-  console.log("load das interações");
   let query = supabaseClient.from("interacao_nova").select("*");
   // if (!isAdmin) query = query.eq("id_doador", currentDoadorId);
 
@@ -1020,8 +1231,7 @@ function updateInteracaoNova(id) {
   }
 
   document.getElementById("editInteracaoId").value = interacao.id_interacao;
-  document.getElementById("editIdDoadorInteracao").value =
-    interacao.id_doador || "";
+  choicesEditDoadorInteracao.setChoiceByValue(String(interacao.id_doador));
   document.getElementById("editTipoInteracao").value =
     interacao.tipo_interacao || "";
   document.getElementById("editObservacoes").value =

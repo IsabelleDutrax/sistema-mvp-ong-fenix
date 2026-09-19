@@ -84,10 +84,9 @@
 
           <primary-button label="Entrar" className="btn-block" data-onclick="signIn()"></primary-button>
 
-          <div class="auth-links">
+          <!-- <div class="auth-links">
             <a onclick="signUp()">Cadastrar</a>
-            <!-- <button class="icon-btn" onclick="signOut()" title="Sair"><i class="fi fi-rr-exit"></i></button> -->
-          </div>
+          </div> -->
         </div>
         <p class="footer-credit">Desenvolvido por Isabelle Dutra — Curso ADS na Uninter, 2026</p>
       </div>
@@ -137,25 +136,43 @@
             <h1>Dashboard</h1>
             <p>Visão geral das doações e doadores</p>
           </div>
-          <button type="button" class="btn btn-outline-secondary" title="Baixa um arquivo com todos os dados do sistema (doadores, doações e interações), útil como cópia de segurança" onclick="exportarBackupCompleto()">
+          <button type="button" class="btn btn-outline-secondary"
+            title="Baixa um arquivo com todos os dados do sistema (doadores, doações e interações), útil como cópia de segurança"
+            onclick="exportarBackupCompleto()">
             <i class="fi fi-rr-cloud-download-alt me-1"></i>Backup completo
           </button>
         </div>
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <i class="fi fi-rr-chart-pie-alt text-primary"></i>
+          <span class="fw-semibold">Totais</span>
+        </div>
         <div class="row g-3">
-          <div class="col-md-6 col-lg-3">
-            <div class="card stat-card">
-              <div class="card-body d-flex justify-content-between align-items-center">
-                <div>
-                  <div class="stat-label">Total Arrecadado</div>
-                  <div class="stat-value" id="statTotalArrecadado">R$ 0,00</div>
-                  <div class="stat-caption">soma das doações registradas</div>
+          <div class="col-md-6">
+            <div class="card stat-card h-100">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <div class="stat-label">Total Arrecadado</div>
+                    <div class="stat-value" id="statTotalArrecadado">R$ 0,00</div>
+                    <div class="stat-caption">soma das doações registradas</div>
+                  </div>
+                  <div class="stat-icon bg-success"><i class="fi fi-rr-chart-line-up"></i></div>
                 </div>
-                <div class="stat-icon bg-success"><i class="fi fi-rr-chart-line-up"></i></div>
+                <select class="form-select form-select-sm mt-2" id="periodoTotalArrecadado"
+                  onchange="renderDashboard()">
+                  <option value="todos" selected>Todo o período</option>
+                  <option value="semana">Última semana</option>
+                  <option value="mes">Último mês</option>
+                  <option value="bimestre">Último bimestre</option>
+                  <option value="trimestre">Último trimestre</option>
+                  <option value="semestre">Último semestre</option>
+                  <option value="ano">Último ano</option>
+                </select>
               </div>
             </div>
           </div>
-          <div class="col-md-6 col-lg-3">
-            <div class="card stat-card stat-card-clickable" onclick="showPage('doador')">
+          <div class="col-md-6">
+            <div class="card stat-card stat-card-clickable h-100" onclick="showPage('doador')">
               <div class="card-body d-flex justify-content-between align-items-center">
                 <div>
                   <div class="stat-label">Doadores</div>
@@ -166,8 +183,8 @@
               </div>
             </div>
           </div>
-          <div class="col-md-6 col-lg-3">
-            <div class="card stat-card stat-card-clickable" onclick="showPage('doacao')">
+          <div class="col-md-6">
+            <div class="card stat-card stat-card-clickable h-100" onclick="showPage('doacao')">
               <div class="card-body d-flex justify-content-between align-items-center">
                 <div>
                   <div class="stat-label">Doações</div>
@@ -178,8 +195,8 @@
               </div>
             </div>
           </div>
-          <div class="col-md-6 col-lg-3">
-            <div class="card stat-card stat-card-clickable" onclick="showPage('interacao')">
+          <div class="col-md-6">
+            <div class="card stat-card stat-card-clickable h-100" onclick="showPage('interacao')">
               <div class="card-body d-flex justify-content-between align-items-center">
                 <div>
                   <div class="stat-label">Interações</div>
@@ -196,7 +213,7 @@
       <!-- Doadores -->
       <div id="doador-section" class="app-page section hidden">
         <h2>Doadores</h2>
-        <div class="d-flex gap-2 mb-3">
+        <div class="d-flex gap-2 mb-3 justify-content-between">
           <primary-button label="Novo Doador +" className="btn btn-orange" data-bs-toggle="modal"
             data-bs-target="#modalNovoDoador"></primary-button>
           <div class="dropdown">
@@ -204,8 +221,10 @@
               <i class="fi fi-rr-download me-1"></i>Exportar
             </button>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#" onclick="exportarCSV('doadorTable', 'doadores')">CSV (Excel)</a></li>
-              <li><a class="dropdown-item" href="#" onclick="exportarPDF('doadorTable', 'doadores', 'Lista de Doadores')">PDF</a></li>
+              <li><a class="dropdown-item" href="#" onclick="exportarCSV('doadorTable', 'doadores')">CSV (Excel)</a>
+              </li>
+              <li><a class="dropdown-item" href="#"
+                  onclick="exportarPDF('doadorTable', 'doadores', 'Lista de Doadores')">PDF</a></li>
             </ul>
           </div>
         </div>
@@ -226,6 +245,10 @@
                     <input type="text" class="form-control" id="doadorNome" placeholder="Nome" required>
                   </div>
                   <div class="mb-3">
+                    <label for="doadorEmail" class="form-label">E-mail</label>
+                    <input type="email" class="form-control" id="doadorEmail" placeholder="E-mail">
+                  </div>
+                  <div class="mb-3">
                     <label for="doadorTelefone" class="form-label">Telefone</label>
                     <input type="text" class="form-control" id="doadorTelefone" placeholder="Telefone">
                   </div>
@@ -236,10 +259,6 @@
                   <div class="mb-3">
                     <label for="doadorEndereco" class="form-label">Endereço</label>
                     <input type="text" class="form-control" id="doadorEndereco" placeholder="Endereço">
-                  </div>
-                  <div class="mb-3">
-                    <label for="doadorEmail" class="form-label">E-mail</label>
-                    <input type="email" class="form-control" id="doadorEmail" placeholder="E-mail">
                   </div>
                 </form>
               </div>
@@ -269,6 +288,10 @@
                     <input type="text" class="form-control" id="editDoadorNome" placeholder="Nome" required>
                   </div>
                   <div class="mb-3">
+                    <label for="editDoadorEmail" class="form-label">E-mail</label>
+                    <input type="email" class="form-control" id="editDoadorEmail" placeholder="E-mail">
+                  </div>
+                  <div class="mb-3">
                     <label for="editDoadorTelefone" class="form-label">Telefone</label>
                     <input type="text" class="form-control" id="editDoadorTelefone" placeholder="Telefone">
                   </div>
@@ -279,10 +302,6 @@
                   <div class="mb-3">
                     <label for="editDoadorEndereco" class="form-label">Endereço</label>
                     <input type="text" class="form-control" id="editDoadorEndereco" placeholder="Endereço">
-                  </div>
-                  <div class="mb-3">
-                    <label for="editDoadorEmail" class="form-label">E-mail</label>
-                    <input type="email" class="form-control" id="editDoadorEmail" placeholder="E-mail">
                   </div>
                 </form>
               </div>
@@ -328,10 +347,14 @@
           <table id="doadorTable">
             <thead>
               <tr>
-                <th>Nome</th>
-                <th>Email</th>
-                <th>Telefone</th>
-                <th>Doações</th>
+                <th class="th-sortable" onclick="ordenarTabela('doadorTable', 0, 'texto')">Nome <i
+                    class="fi fi-rr-sort icone-ordenacao"></i></th>
+                <th class="th-sortable" onclick="ordenarTabela('doadorTable', 1, 'texto')">Email <i
+                    class="fi fi-rr-sort icone-ordenacao"></i></th>
+                <th class="th-sortable" onclick="ordenarTabela('doadorTable', 2, 'texto')">Telefone <i
+                    class="fi fi-rr-sort icone-ordenacao"></i></th>
+                <th class="th-sortable" onclick="ordenarTabela('doadorTable', 3, 'numero')">Doações <i
+                    class="fi fi-rr-sort icone-ordenacao"></i></th>
                 <th>Ações</th>
               </tr>
             </thead>
@@ -343,7 +366,7 @@
       <!-- Doações -->
       <div id="doacao-section" class="app-page section hidden">
         <h2>Doações</h2>
-        <div class="d-flex gap-2 mb-3">
+        <div class="d-flex gap-2 mb-3 justify-content-between">
           <primary-button label="Nova Doação +" className="btn btn-orange" data-bs-toggle="modal"
             data-bs-target="#modalNovaDoacao"></primary-button>
           <div class="dropdown">
@@ -352,7 +375,8 @@
             </button>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="#" onclick="exportarCSV('doacaoTable', 'doacoes')">CSV (Excel)</a></li>
-              <li><a class="dropdown-item" href="#" onclick="exportarPDF('doacaoTable', 'doacoes', 'Lista de Doações')">PDF</a></li>
+              <li><a class="dropdown-item" href="#"
+                  onclick="exportarPDF('doacaoTable', 'doacoes', 'Lista de Doações')">PDF</a></li>
             </ul>
           </div>
         </div>
@@ -421,6 +445,12 @@
                 <form id="formEditarDoacao">
                   <input type="hidden" id="editDoacaoId">
                   <div class="mb-3">
+                    <label for="editIdDoador" class="form-label">Doador</label>
+                    <select class="form-select" id="editIdDoador" required>
+                      <option value="" disabled selected>Selecione um doador</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
                     <label for="editDoacaoValor" class="form-label">Valor</label>
                     <div class="input-group">
                       <span class="input-group-text">R$</span>
@@ -467,10 +497,14 @@
           <table id="doacaoTable">
             <thead>
               <tr>
-                <th>Doador</th>
-                <th>Valor</th>
-                <th>Data</th>
-                <th>Status</th>
+                <th class="th-sortable" onclick="ordenarTabela('doacaoTable', 0, 'texto')">Doador <i
+                    class="fi fi-rr-sort icone-ordenacao"></i></th>
+                <th class="th-sortable" onclick="ordenarTabela('doacaoTable', 1, 'moeda')">Valor <i
+                    class="fi fi-rr-sort icone-ordenacao"></i></th>
+                <th class="th-sortable" onclick="ordenarTabela('doacaoTable', 2, 'data')">Data <i
+                    class="fi fi-rr-sort icone-ordenacao"></i></th>
+                <th class="th-sortable" onclick="ordenarTabela('doacaoTable', 3, 'texto')">Status <i
+                    class="fi fi-rr-sort icone-ordenacao"></i></th>
                 <th>Ações</th>
               </tr>
             </thead>
@@ -482,7 +516,7 @@
       <!-- Interações -->
       <div id="interacao-section" class="app-page section hidden">
         <h2>Interações</h2>
-        <div class="d-flex gap-2 mb-3">
+        <div class="d-flex gap-2 mb-3 justify-content-between">
           <primary-button label="Nova Interação +" className="btn btn-orange" data-bs-toggle="modal"
             data-bs-target="#modalNovaInteracao"></primary-button>
           <div class="dropdown">
@@ -490,8 +524,10 @@
               <i class="fi fi-rr-download me-1"></i>Exportar
             </button>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#" onclick="exportarCSV('interacaoTable', 'interacoes')">CSV (Excel)</a></li>
-              <li><a class="dropdown-item" href="#" onclick="exportarPDF('interacaoTable', 'interacoes', 'Lista de Interações')">PDF</a></li>
+              <li><a class="dropdown-item" href="#" onclick="exportarCSV('interacaoTable', 'interacoes')">CSV
+                  (Excel)</a></li>
+              <li><a class="dropdown-item" href="#"
+                  onclick="exportarPDF('interacaoTable', 'interacoes', 'Lista de Interações')">PDF</a></li>
             </ul>
           </div>
         </div>
@@ -601,10 +637,14 @@
           <table id="interacaoTable">
             <thead>
               <tr>
-                <th>Doador</th>
-                <th>Tipo</th>
-                <th>Obs</th>
-                <th>Data</th>
+                <th class="th-sortable" onclick="ordenarTabela('interacaoTable', 0, 'texto')">Doador <i
+                    class="fi fi-rr-sort icone-ordenacao"></i></th>
+                <th class="th-sortable" onclick="ordenarTabela('interacaoTable', 1, 'texto')">Tipo <i
+                    class="fi fi-rr-sort icone-ordenacao"></i></th>
+                <th class="th-sortable" onclick="ordenarTabela('interacaoTable', 2, 'texto')">Obs <i
+                    class="fi fi-rr-sort icone-ordenacao"></i></th>
+                <th class="th-sortable" onclick="ordenarTabela('interacaoTable', 3, 'data')">Data <i
+                    class="fi fi-rr-sort icone-ordenacao"></i></th>
                 <th>Ações</th>
               </tr>
             </thead>

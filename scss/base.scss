@@ -13,21 +13,41 @@ h1 {
 
 table {
     width: 100%;
-    table-layout: fixed;
+    // table-layout: auto deixa cada coluna com a largura que o conteúdo dela
+    // realmente precisa (ex: coluna "Doações", que só tem um número, fica fina;
+    // "Nome"/"Email" ficam mais largas). Continua não estourando a tela porque
+    // ".actions-content" quebra os ícones em linha quando fica apertado.
     border-collapse: collapse;
     margin-top: $margin;
+    font-size: 12px;
 
     th {
         background: $secondary-color;
         color: #333;
-        padding: $padding;
+        padding: 10px;
         text-align: left;
+        font-size: 12px;
     }
 
     td {
-        padding: $padding;
+        padding: 10px;
         border: 1px solid $border-color;
         word-wrap: break-word;
+        font-size: 12px;
+    }
+
+    th.th-sortable {
+        cursor: pointer;
+        user-select: none;
+
+        &:hover {
+            background: darken($secondary-color, 5%);
+        }
+    }
+
+    .icone-ordenacao {
+        font-size: 10px;
+        color: #aaa;
     }
 
 }
@@ -36,8 +56,25 @@ table {
 .actions-content {
     display: flex;
     align-items: center;
-    gap: 8px;
+    // Nunca deixa os botões estourarem a largura da coluna: se não couberem
+    // todos numa linha, quebram pra segunda linha em vez de vazar pra fora.
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px;
     height: 100%;
+
+    i {
+        font-size: 12px;
+    }
+
+    // Ícone de fonte (<i>) é inline e o navegador reserva um espaço embaixo dele
+    // pra "descendentes" de letra (g, j...), mesmo sem precisar. Virar flex
+    // centraliza pelo tamanho real do conteúdo e remove essa sobra.
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
 }
 
 .table-responsive {
@@ -48,11 +85,15 @@ table {
 
 @media (max-width: 768px) {
     .table-responsive table {
-        min-width: 600px;
-
         th,
         td {
             padding: 10px;
+        }
+
+        // Botões de ação um pouco menores no mobile (ícone continua 12px, só o
+        // preenchimento em volta encolhe), pra caber mais coisa numa linha.
+        .actions-content .btn {
+            padding: 4px 6px;
         }
     }
 }

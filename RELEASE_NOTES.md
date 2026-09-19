@@ -4,6 +4,40 @@ Histórico de mudanças do projeto, organizado por commit/entrega. Formato inspi
 
 
 
+## 2026-09-19 — Auditoria geral antes da apresentação + correções
+### Adicionado
+- Validação de telefone do doador (10 ou 11 dígitos com DDD, só quando preenchido) na criação e edição.
+- Campo "Doador" no modal de editar doação (antes só existia na criação — não dava pra trocar o doador de uma doação já registrada).
+- Validações de "forma de pagamento" (criar e editar doação) e "status" (editar doação) obrigatórios.
+- Nome do doador salvo automaticamente com a primeira letra maiúscula, na criação.
+- Trava: não deixa mais excluir um doador que tenha doações ou interações vinculadas (mostra aviso explicando o motivo, em vez de deixar o registro "órfão" silenciosamente).
+### Corrigido
+- Campo "Doador" não aparecia selecionado ao abrir o modal de editar Interação (o valor por trás estava certo, mas a caixa de busca/Choices.js não refletia visualmente) — mesmo tipo de ajuste já feito em Editar Doação, replicado aqui.
+- Status de doação nova vinha "pendente" (minúsculo) por um valor padrão do banco, não batendo com o resto do sistema (badge cinza em vez de amarelo, e bloqueava a edição por causa da nova validação de status); agora o valor "Pendente" é enviado explicitamente na criação.
+- Removido um `console.log` esquecido que aparecia toda vez que a tela de Interações carregava.
+### Alterado
+- Ordem dos campos no formulário de Doador (criação e edição): Nome → E-mail → Telefone → CPF/CNPJ → Endereço, priorizando identificação e contatos mais usados no sistema (busca, e-mail) antes dos campos menos consultados no dia a dia.
+### Pendências identificadas (não alteradas — decisão em aberto)
+- Excluir Doador ou Doação não exige usuário admin, mas excluir Interação exige — avaliar se deve padronizar.
+
+## 2026-09-18 — Exportar/ordenar tabelas, doações do doador, período no Dashboard
+### Adicionado
+- Botão "Exportar" (CSV e PDF) nas tabelas de Doadores, Doações e Interações, ignorando a coluna "Ações" — CSV feito sem biblioteca, PDF via jsPDF + jspdf-autotable (CDN).
+- Campo de busca nos selects de doador (Nova Doação, Nova Interação, Editar Interação), usando a biblioteca Choices.js.
+- Ícone de e-mail (mailto) na tabela de Doadores, exibido quando o doador tem e-mail cadastrado.
+- Coluna "Doações" na tabela de Doadores: mostra a quantidade de doações e abre um modal com a lista completa das doações daquele doador ao clicar.
+- Destaque com ícone de relógio vermelho quando a data de uma doação é futura (doação "prometida", ainda não realizada).
+- Botão de copiar mensagem de lembrete pronta pro doador (ícone de clipe na tabela de Doadores).
+- Botão "Backup completo" no Dashboard: baixa doadores + doações + interações num único arquivo JSON.
+- Seção "Totais" acima dos cards do Dashboard, e select de período (última semana/mês/bimestre/trimestre/semestre/ano/todo o período) dentro do card "Total Arrecadado", recalculando a soma a partir dos dados já carregados.
+- Ordenação por clique no cabeçalho das colunas (Doadores, Doações, Interações): alterna crescente/decrescente, com ícone indicando a coluna e direção ativas; cada coluna ordena pelo tipo certo (texto, número, moeda ou data).
+### Alterado
+- Cards do Dashboard com altura igual entre si (`h-100`), respeitando o empilhamento responsivo — cada linha de cards se ajusta de forma independente no tablet/mobile.
+- Tabelas: fonte reduzida para 12px, padding das células para 10px no desktop, ícones dos botões de ação para 12px e espaçamento entre eles reduzido (o botão de excluir estava ficando cortado na coluna "Ações").
+- Removida a validação que bloqueava data futura na doação (criação e edição), permitindo registrar doações combinadas/prometidas com data futura — necessário pro destaque de data futura funcionar.
+### Corrigido
+- Botão "X" de fechar os modais ficava verde no hover: herdava um `button:hover` genérico antigo (de antes do Bootstrap), que agora está sobrescrito especificamente para `.btn-close`.
+
 ## 2026-09-17 — Fim dos alertas nativos + cards do Dashboard clicáveis
 ### Adicionado
 - Cards "Doadores", "Doações" e "Interações" do Dashboard agora são clicáveis e levam direto pra aba correspondente, com destaque no hover (o card "Total Arrecadado" continua sem ação).

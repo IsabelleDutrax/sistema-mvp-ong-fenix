@@ -12,27 +12,50 @@ h1 {
 
 table {
   width: 100%;
-  table-layout: fixed;
   border-collapse: collapse;
   margin-top: 10px;
+  font-size: 12px;
 }
 table th {
   background: #f2f2f2;
   color: #333;
-  padding: 15px;
+  padding: 10px;
   text-align: left;
+  font-size: 12px;
 }
 table td {
-  padding: 15px;
+  padding: 10px;
   border: 1px solid #ddd;
   word-wrap: break-word;
+  font-size: 12px;
+}
+table th.th-sortable {
+  cursor: pointer;
+  user-select: none;
+}
+table th.th-sortable:hover {
+  background: #e5e5e5;
+}
+table .icone-ordenacao {
+  font-size: 10px;
+  color: #aaa;
 }
 
 .actions-content {
   display: flex;
   align-items: center;
-  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px;
   height: 100%;
+}
+.actions-content i {
+  font-size: 12px;
+}
+.actions-content .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .table-responsive {
@@ -42,12 +65,12 @@ table td {
 }
 
 @media (max-width: 768px) {
-  .table-responsive table {
-    min-width: 600px;
-  }
   .table-responsive table th,
   .table-responsive table td {
     padding: 10px;
+  }
+  .table-responsive table .actions-content .btn {
+    padding: 4px 6px;
   }
 }
 .section {
@@ -83,6 +106,13 @@ button {
 }
 button:hover {
   background-color: #3d8b40;
+}
+
+.btn-close {
+  background-color: transparent;
+}
+.btn-close:hover {
+  background-color: transparent;
 }
 
 button.secondary {
@@ -490,6 +520,11 @@ button.btn-block:hover {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.sidebar-toggler:hover {
+  background-color: white;
+  border-color: #FF5722;
+  color: #FF5722;
 }
 
 .sidebar-close {
